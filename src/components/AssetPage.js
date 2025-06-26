@@ -936,7 +936,7 @@ import { nelloreUnit, formatCurrency } from './Sidebar';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, registerables } from 'chart.js';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaEnvelope, FaTimes, FaPaperPlane } from 'react-icons/fa';
+import {  FaTimes, FaPaperPlane } from 'react-icons/fa';
 import { FiPackage } from 'react-icons/fi';
 import { useState } from 'react';
 ChartJS.register(...registerables);
@@ -952,7 +952,7 @@ const AssetPage = ({ setActiveAsset }) => {
 
   const assetArray = [...nelloreUnit.commercialAssets, ...nelloreUnit.nonCommercialAssets];
   const asset = assetArray.find(
-    (a) => a.id == assetId || a.id.toLowerCase() == assetId?.toLowerCase()
+    (a) => a.id === assetId || a.id.toLowerCase() === assetId?.toLowerCase()
   );
 
   const handleSendMessage = () => {

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef  } from "react";
-import { FaChevronDown, FaChevronUp, FaDollarSign, FaChartBar, FaChartPie, FaUsers } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaDollarSign, FaChartBar,  FaUsers } from "react-icons/fa";
 import { Bar, Pie, Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 import { motion } from "framer-motion";
@@ -9,7 +9,7 @@ import { FaPaperPlane, FaTimes } from 'react-icons/fa';
 import { AnimatePresence } from 'framer-motion';
 import { Doughnut } from 'react-chartjs-2';
 import { FiBarChart2,FiChevronRight } from 'react-icons/fi';
-import { FaMoneyBillWave, FaPiggyBank, FaArrowCircleDown, FaArrowCircleUp } from 'react-icons/fa';
+import {  FaArrowCircleDown, FaArrowCircleUp } from 'react-icons/fa';
 import { FaLandmark, FaWallet, FaShieldAlt } from 'react-icons/fa';
 import { FaBuilding, FaHome } from 'react-icons/fa';
 
