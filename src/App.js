@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import AssetPage from './components/AssetPage';
@@ -15,14 +15,14 @@ function App() {
   return (
     <Router>
       <div className="flex">
-        <Sidebar activeAssetId={activeAssetId} />
+        <Sidebar activeAssetId={activeAssetId} setActiveAssetId={setActiveAssetId}/>
         <div className="flex-1">
           <Routes>
             {/* <Route path="/unit/:unitId" element={<UnitDashboard />} /> */}
             <Route path="/:id" element={<AssetPage setActiveAsset={setActiveAssetId}/>} />
             <Route path="/NelloreUnit" element={<DashboardLayout />} />
             <Route path="/AP" element={<AndhraPradeshLayout />} />
-            {/* <Route path="/rp" element={<RevenuePieChart />} /> */}
+            <Route path="/" element={<Navigate to="/AP" replace />} />
             
           </Routes>
         </div>

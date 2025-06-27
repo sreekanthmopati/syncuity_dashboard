@@ -1899,14 +1899,14 @@ export const formatCurrency = (amount) => {
 
 
 
-const Sidebar = ({ activeAssetId }) => {
+const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
   const navigate = useNavigate();
   const { assetId } = useParams();
 
   const [openSections, setOpenSections] = useState({
-    units: true,
-    commercialAssets: true,
-    nonCommercialAssets: true
+    units: false,
+    commercialAssets: false,
+    nonCommercialAssets: false
   });
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -1929,7 +1929,6 @@ const Sidebar = ({ activeAssetId }) => {
     }
   `;
 
-  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
@@ -1941,41 +1940,69 @@ const Sidebar = ({ activeAssetId }) => {
   }, []);
 
   const navigateToAsset = (assetId) => {
+    setActiveAssetId(assetId);
     const isCommercial = nelloreUnit.commercialAssets.some(a => a.id === assetId);
-    setOpenSections(prev => ({
-      ...prev,
+    setOpenSections({
       units: true,
       commercialAssets: isCommercial,
       nonCommercialAssets: !isCommercial
-    }));
+    });
     navigate(`/${assetId}`);
     if (isMobile) setSidebarOpen(false);
   };
 
-  const navigateToUnit = () => {
-    setOpenSections(prev => ({
-      ...prev,
+  const navigateToAPDashboard = () => {
+    setActiveAssetId(null);
+    setOpenSections({
+      units: false,
       commercialAssets: false,
       nonCommercialAssets: false
-    }));
+    });
     navigate("/AP");
     if (isMobile) setSidebarOpen(false);
   };
 
+  const navigateToNelloreUnit = () => {
+    setActiveAssetId(null);
+    setOpenSections({
+      units: true,
+      commercialAssets: false,
+      nonCommercialAssets: false
+    });
+    navigate("/NelloreUnit");
+    if (isMobile) setSidebarOpen(false);
+  };
+
   const toggleSection = (section) => setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
-  const isAssetActive = (id) => activeAssetId === id;
   
-  const isUnitActive = () => {
-    return !assetId && (window.location.pathname === '/' || window.location.pathname === '/AP');
+  const isAPDashboardActive = () => {
+    return window.location.pathname === '/' || window.location.pathname === '/AP';
   };
 
   const isNelloreUnitActive = () => {
-    return window.location.pathname === '/NelloreUnit' || 
-           (assetId && nelloreUnit.commercialAssets.concat(nelloreUnit.nonCommercialAssets).some(a => a.id === assetId));
+    return window.location.pathname === '/NelloreUnit';
+  };
+
+  const isAssetActive = (id) => {
+    return window.location.pathname === `/${id}`;
   };
 
   useEffect(() => {
-    if (assetId) {
+    const path = window.location.pathname;
+    
+    if (path === '/' || path === '/AP') {
+      setOpenSections({
+        units: false,
+        commercialAssets: false,
+        nonCommercialAssets: false
+      });
+    } else if (path === '/NelloreUnit') {
+      setOpenSections({
+        units: true,
+        commercialAssets: false,
+        nonCommercialAssets: false
+      });
+    } else if (assetId) {
       const isCommercial = nelloreUnit.commercialAssets.some(a => a.id === assetId);
       setOpenSections({
         units: true,
@@ -2000,7 +2027,6 @@ const Sidebar = ({ activeAssetId }) => {
     <>
       <style>{scrollbarStyle}</style>
       <div className={`fixed md:relative z-50 w-64 h-screen flex flex-col bg-slate-900 border-r border-slate-700 shadow-xl transition-all duration-300 ${sidebarOpen ? 'left-0' : '-left-64'}`}>
-        {/* Mobile close button */}
         {isMobile && (
           <button 
             onClick={() => setSidebarOpen(false)}
@@ -2010,7 +2036,6 @@ const Sidebar = ({ activeAssetId }) => {
           </button>
         )}
 
-        {/* Header */}
         <div className="p-4 border-b border-slate-700 bg-gradient-to-r from-slate-800/50 to-slate-900/50">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-blue-600 rounded-lg shadow">
@@ -2020,7 +2045,6 @@ const Sidebar = ({ activeAssetId }) => {
           </div>
         </div>
 
-        {/* Search */}
         <div className="p-3 border-b border-slate-700">
           <div className="relative">
             <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
@@ -2042,22 +2066,19 @@ const Sidebar = ({ activeAssetId }) => {
           </div>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 overflow-y-auto overflow-x-hidden py-1 px-2 custom-scrollbar space-y-1">
-          {/* Dashboard */}
           <motion.div 
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className={`flex items-center p-2 rounded-lg cursor-pointer transition-all
-                      ${isUnitActive() ? 'bg-blue-600/90 text-white shadow-md' : 'hover:bg-slate-800/70 text-slate-200'}`}
-            onClick={navigateToUnit}
+                      ${isAPDashboardActive() ? 'bg-blue-600/90 text-white shadow-md' : 'hover:bg-slate-800/70 text-slate-200'}`}
+            onClick={navigateToAPDashboard}
           >
             <FiPieChart className="text-lg" />
             <span className="ml-3 text-sm font-medium">Dashboard</span>
-            {isUnitActive() && <FiChevronRight className="ml-auto text-sm" />}
+            {isAPDashboardActive() && <FiChevronRight className="ml-auto text-sm" />}
           </motion.div>
 
-          {/* Unit Section */}
           <div className="space-y-1">
             <motion.div
               whileHover={{ scale: 1.02 }}
@@ -2065,7 +2086,7 @@ const Sidebar = ({ activeAssetId }) => {
                         ${isNelloreUnitActive() ? 
                           'bg-blue-900/40 border-l-4 border-blue-400 shadow-md' : 
                           'hover:bg-slate-800/50 text-slate-200'}`}
-              onClick={() => {toggleSection('units'); navigate("/NelloreUnit");}}
+              onClick={navigateToNelloreUnit}
             >
               <div className={`p-1.5 rounded-md ${
                 isNelloreUnitActive() ? 
@@ -2187,32 +2208,23 @@ const Sidebar = ({ activeAssetId }) => {
             </AnimatePresence>
           </div>
 
-          {/* Additional Units */}
           <motion.div
-  whileHover={{ scale: 1.02 }}
-  className={`flex items-center p-2 rounded-lg cursor-pointer transition-all
-    hover:bg-green-900/40 hover:border-l-4 hover:border-green-400 hover:shadow-md text-slate-200`}
-  
->
-  <div className="p-1.5 rounded-md bg-green-500 text-white shadow-sm">
-    <FiLayers className="text-lg" />
-  </div>
-  <div className="ml-3">
-    <span className="text-sm font-medium text-white">
-      Srikakulam Unit
-    </span>
-    <span className="block text-xs text-green-200 mt-0.5">
-      Data loading soon...
-    </span>
-  </div>
-  <div className="ml-auto">
-    <FiChevronRight className="text-sm text-green-300" />
-  </div>
-</motion.div>
-
+            whileHover={{ scale: 1.02 }}
+            className="flex items-center p-2 rounded-lg cursor-pointer transition-all hover:bg-green-900/40 hover:border-l-4 hover:border-green-400 hover:shadow-md text-slate-200"
+          >
+            <div className="p-1.5 rounded-md bg-green-500 text-white shadow-sm">
+              <FiLayers className="text-lg" />
+            </div>
+            <div className="ml-3">
+              <span className="text-sm font-medium text-white">Srikakulam Unit</span>
+              <span className="block text-xs text-green-200 mt-0.5">Data loading soon...</span>
+            </div>
+            <div className="ml-auto">
+              <FiChevronRight className="text-sm text-green-300" />
+            </div>
+          </motion.div>
         </nav>
 
-        {/* User Profile */}
         <div className="mt-auto p-3 border-t border-slate-700 bg-gradient-to-t from-slate-800/70 to-slate-900/50">
           <motion.div 
             whileHover={{ scale: 1.02 }}
