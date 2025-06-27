@@ -975,7 +975,7 @@ import { useNavigate,  useParams } from "react-router-dom";
 import { 
   FiChevronDown, FiChevronRight, FiX, FiSearch,
   FiPieChart, FiHome, FiDollarSign,
-  FiUser, FiLayers,  FiBarChart2, FiDatabase
+  FiUser, FiBarChart2, FiDatabase
 } from 'react-icons/fi';
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -1963,14 +1963,26 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
   };
 
   const navigateToNelloreUnit = () => {
-    setActiveAssetId(null);
-    setOpenSections({
-      units: true,
-      commercialAssets: false,
-      nonCommercialAssets: false
-    });
-    navigate("/NelloreUnit");
-    if (isMobile) setSidebarOpen(false);
+    // Check if the Nellore unit is already active
+    const isAlreadyActive = activeAssetId === "NelloreUnit" && openSections.units;
+    
+    if (isAlreadyActive) {
+      // If already active, close the units section
+      setOpenSections(prev => ({
+        ...prev,
+        units: false
+      }));
+    } else {
+      // If not active, navigate and open the units section
+      setActiveAssetId("NelloreUnit");
+      setOpenSections({
+        units: true,
+        commercialAssets: false,
+        nonCommercialAssets: false
+      });
+      navigate("/NelloreUnit");
+      if (isMobile) setSidebarOpen(false);
+    }
   };
 
   const toggleSection = (section) => setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
@@ -2209,20 +2221,20 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
           </div>
 
           <motion.div
-            whileHover={{ scale: 1.02 }}
-            className="flex items-center p-2 rounded-lg cursor-pointer transition-all hover:bg-green-900/40 hover:border-l-4 hover:border-green-400 hover:shadow-md text-slate-200"
-          >
-            <div className="p-1.5 rounded-md bg-green-500 text-white shadow-sm">
-              <FiLayers className="text-lg" />
-            </div>
-            <div className="ml-3">
-              <span className="text-sm font-medium text-white">Srikakulam Unit</span>
-              <span className="block text-xs text-green-200 mt-0.5">Data loading soon...</span>
-            </div>
-            <div className="ml-auto">
-              <FiChevronRight className="text-sm text-green-300" />
-            </div>
-          </motion.div>
+  whileHover={{ scale: 1.02 }}
+  className="flex items-center p-2 rounded-lg cursor-pointer transition-all hover:bg-slate-800/50 text-slate-200"
+>
+  <div className="p-1.5 rounded-md bg-slate-700/60 text-slate-300">
+    <FiDatabase className="text-lg" />
+  </div>
+  <div className="ml-3">
+    <span className="text-sm font-medium text-slate-200">Srikakulam Unit</span>
+    <span className="block text-xs text-slate-400 mt-0.5">Data loading soon...</span>
+  </div>
+  <div className="ml-auto">
+    <FiChevronRight className="text-sm text-slate-400" />
+  </div>
+</motion.div>
         </nav>
 
         <div className="mt-auto p-3 border-t border-slate-700 bg-gradient-to-t from-slate-800/70 to-slate-900/50">
