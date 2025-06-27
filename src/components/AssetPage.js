@@ -1046,39 +1046,39 @@ const AssetPage = ({ setActiveAsset }) => {
     }]
   };
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'bottom',
-        labels: {
-          boxWidth: 12,
-          padding: 12,
-          font: { size: 12 },
-          usePointStyle: true
-        }
-      },
-      tooltip: {
-        callbacks: {
-          label: (context) => `${context.label}: ${formatCurrency(context.raw)}`
-        },
-        displayColors: true,
-        usePointStyle: true,
-        padding: 12,
-        bodyFont: { size: 12 }
-      }
-    },
-    animation: {
-      duration: 2000,
-      animateScale: true,
-      animateRotate: true
-    },
-    elements: {
-      arc: { borderJoinStyle: 'round' },
-      bar: { borderSkipped: false }
-    }
-  };
+  // const chartOptions = {
+  //   responsive: true,
+  //   maintainAspectRatio: false,
+  //   plugins: {
+  //     legend: {
+  //       position: 'bottom',
+  //       labels: {
+  //         boxWidth: 12,
+  //         padding: 12,
+  //         font: { size: 12 },
+  //         usePointStyle: true
+  //       }
+  //     },
+  //     tooltip: {
+  //       callbacks: {
+  //         label: (context) => `${context.label}: ${formatCurrency(context.raw)}`
+  //       },
+  //       displayColors: true,
+  //       usePointStyle: true,
+  //       padding: 12,
+  //       bodyFont: { size: 12 }
+  //     }
+  //   },
+  //   animation: {
+  //     duration: 2000,
+  //     animateScale: true,
+  //     animateRotate: true
+  //   },
+  //   elements: {
+  //     arc: { borderJoinStyle: 'round' },
+  //     bar: { borderSkipped: false }
+  //   }
+  // };
   const lastUpdatedDate = '12/05/2025';
 
   return (
@@ -1230,287 +1230,236 @@ const AssetPage = ({ setActiveAsset }) => {
         )}
       </AnimatePresence>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 overflow-hidden">
-        {/* Asset Table */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden flex flex-col"
-        >
-          <h2 className="text-lg font-semibold p-3 text-gray-800 border-b">📋 Asset Details</h2>
-          <div className="overflow-y-auto overflow-x-hidden custom-scrollbar flex-1">
-            <table className="w-full">
-              <tbody>
-                {tableData.map((row, index) => (
-                  <motion.tr
-                    key={index}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                    whileHover={{ scale: 1.02 }}
-                    className={`bg-gradient-to-r ${row.bg} hover:shadow-md transition-all duration-200`}
-                  >
-                    <td className="py-2 px-3 font-medium text-gray-700">{row.label}</td>
-                    <td className="py-2 px-3 text-right font-mono">{row.value}</td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </motion.div>
-
-        {/* Financial Summary Chart */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white rounded-lg overflow-hidden flex flex-col"
-        >
-          <h2 className="text-lg font-semibold p-3 text-gray-800 border-b">📊 Financial Summary</h2>
-          <div className="flex-1 p-1">
-            <Bar data={barChartData} options={{
-              ...chartOptions,
-              scales: {
-                y: {
-                  beginAtZero: true,
-                  ticks: {
-                    callback: (value) => formatCurrency(value).replace('₹', ''),
-                    font: { size: 10 }
-                  },
-                  grid: { drawTicks: false }
-                },
-                x: {
-                  grid: { display: false },
-                  ticks: { font: { size: 10 } }
-                }
-              }
-            }} />
-          </div>
-        </motion.div>
-
-        {/* Pie Chart */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="flex flex-col rounded-lg shadow-none overflow-hidden"
-        >
-          <h2 className="text-lg font-semibold p-3 text-gray-800 border-b">💰 Income & Assets</h2>
-          <div className="flex-1 p-1 bg-white">
-            <Pie data={incomeAssetsData} options={{
-              ...chartOptions,
-              plugins: {
-                ...chartOptions.plugins,
-                tooltip: {
-                  ...chartOptions.plugins.tooltip,
-                  callbacks: {
-                    label: (context) => {
-                      const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                      const percentage = Math.round((context.raw / total) * 100);
-                      return `${context.label}: ${formatCurrency(context.raw)} (${percentage}%)`;
-                    }
-                  }
-                }
-              }
-            }} />
-          </div>
-        </motion.div>
-
-        {/* Inventory Table */}
-        {/* <motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5, delay: 0.6 }}
-  className="flex flex-col bg-white rounded-lg shadow border border-gray-200 overflow-hidden"
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 flex-1 min-h-0 pb-1">
+    {/* Asset Table - With restored background gradients */}
+    <motion.div
+  initial={{ opacity: 0, x: -20 }}
+  animate={{ opacity: 1, x: 0 }}
+  className="bg-white rounded-lg shadow border border-gray-200 flex flex-col h-full"
 >
-  <h2 className="text-lg font-semibold p-3 text-gray-800 border-b">📦 Inventory Details</h2>
-  <div className="flex-1 overflow-y-auto custom-scrollbar p-3">
-    {asset.inventory && asset.inventory.length > 0 ? (
-      <table className="w-full">
-        <thead>
-          <tr className="border-b">
-            <th className="text-left py-2 px-1 text-sm font-medium text-gray-500">Item</th>
-            <th className="text-right py-2 px-1 text-sm font-medium text-gray-500">Quantity</th>
-            <th className="text-right py-2 px-1 text-sm font-medium text-gray-500">Value</th>
-            <th className="text-right py-2 px-1 text-sm font-medium text-gray-500">Last Updated</th>
-          </tr>
-        </thead>
-        <tbody>
-          {asset.inventory.map((item, index) => (
-            <tr 
-              key={index} 
-              className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-            >
-              <td className="py-2 px-1 text-sm font-medium text-gray-700">{item.name}</td>
-              <td className="py-2 px-1 text-right text-sm text-gray-600">{item.quantity} {item.unit}</td>
-              <td className="py-2 px-1 text-right text-sm font-mono text-gray-600">
-                {formatCurrency(item.value)}
-              </td>
-              <td className="py-2 px-1 text-right text-xs text-gray-500">
-                {new Date(item.lastUpdated).toLocaleDateString()}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-        <tfoot className="bg-gray-50">
-          <tr>
-            <td className="py-2 px-1 text-sm font-bold text-gray-700">Total</td>
-            <td className="py-2 px-1 text-right text-sm font-bold text-gray-700">
-              {asset.inventory.reduce((sum, item) => sum + item.quantity, 0)}
-            </td>
-            <td className="py-2 px-1 text-right text-sm font-bold text-gray-700">
-              {formatCurrency(
-                asset.inventory.reduce((sum, item) => sum + item.value, 0)
-              )}
-            </td>
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
-    ) : (
-      <div className="flex flex-col items-center justify-center h-full text-gray-400">
-        <FiPackage className="text-4xl mb-2" />
-        <p>No inventory data available</p>
-      </div>
-    )}
-  </div>
-</motion.div> */}
-{/* <motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5, delay: 0.6 }}
-  className="flex flex-col bg-white rounded-lg shadow border border-gray-200 overflow-hidden"
->
-  <h2 className="text-lg font-semibold p-3 text-gray-800 border-b">📦 Inventory Details</h2>
-  <div className="flex-1 overflow-y-auto custom-scrollbar p-3">
-    {asset.inventory && asset.inventory.length > 0 ? (
-      <table className="w-full">
-        <thead>
-          <tr className="border-b">
-            <th className="text-left py-2 px-1 text-sm font-medium text-gray-500">Item</th>
-            <th className="text-right py-2 px-1 text-sm font-medium text-gray-500">Current Qty</th>
-            <th className="text-right py-2 px-1 text-sm font-medium text-gray-500"> Current Value</th>
-            <th className="text-right py-2 px-1 text-sm font-medium text-gray-500">Receivables (Qty)</th>
-           
-            <th className="text-right py-2 px-1 text-sm font-medium text-gray-500">Receivable Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {asset.inventory.map((item, index) => (
-            <tr
-              key={index}
-              className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-            >
-              <td className="py-2 px-1 text-sm font-medium text-gray-700">{item.name}</td>
-              <td className="py-2 px-1 text-right text-sm text-gray-600">
-                {item.quantity} {item.unit}
-              </td>
-              <td className="py-2 px-1 text-right text-sm font-mono text-gray-600">
-                {formatCurrency(item.currentValue)}
-              </td>
-              <td className="py-2 px-1 text-right text-sm text-gray-600">
-                {item.receivable?.quantity || 0}
-              </td>
-              
-              <td className="py-2 px-1 text-right text-xs text-gray-500">
-                {item.receivable?.expectedDate
-                  ? new Date(item.receivable.expectedDate).toLocaleDateString()
-                  : '—'}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-        <tfoot className="bg-gray-50">
-          <tr>
-            <td className="py-2 px-1 text-sm font-bold text-gray-700">Total</td>
-            <td className="py-2 px-1 text-right text-sm font-bold text-gray-700">
-              {asset.inventory.reduce((sum, item) => sum + item.quantity, 0)}
-            </td>
-            <td className="py-2 px-1 text-right text-sm font-bold text-gray-700">
-            {asset.inventory.reduce((sum, item) => sum + (item.currentValue || 0), 0)}
-            </td>
-            <td className="py-2 px-1 text-right text-sm font-bold text-gray-700">
-              {asset.inventory.reduce((sum, item) => sum + (item.receivable?.quantity || 0), 0)}
-            </td>
-           
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
-    ) : (
-      <div className="flex flex-col items-center justify-center h-full text-gray-400">
-        <FiPackage className="text-4xl mb-2" />
-        <p>No inventory data available</p>
-      </div>
-    )}
-  </div>
-</motion.div> */}
+  <h2 className="text-lg font-semibold p-3 text-gray-800 border-b">📋 Asset Details</h2>
 
-<motion.div 
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5, delay: 0.6 }}
-  className="flex flex-col bg-white rounded-lg shadow border border-gray-200 overflow-hidden"
->
-  <h2 className="text-lg font-semibold p-3 text-gray-800 border-b">📦 Inventory Details</h2>
-  <div className="flex-1 overflow-y-auto custom-scrollbar p-3">
-    {asset.inventory && asset.inventory.length > 0 ? (
-      <table className="w-full">
-        <thead>
-          <tr className="border-b">
-            <th className="text-left py-2 px-1 text-sm font-medium text-gray-500">Item</th>
-            <th className="text-right py-2 px-1 text-sm font-medium text-gray-500">Current Qty</th>
-            <th className="text-right py-2 px-1 text-sm font-medium text-gray-500">Current Value</th>
-            <th className="text-right py-2 px-1 text-sm font-medium text-gray-500">Receivables (Qty)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {asset.inventory.map((item, index) => (
-            <tr
-              key={index}
-              className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-            >
-              <td className="py-2 px-1 text-sm font-medium text-gray-700">{item.name}</td>
-              <td className="py-2 px-1 text-right text-sm text-gray-600">
-                {item.quantity} {item.unit}
-              </td>
-              <td className="py-2 px-1 text-right text-sm font-mono text-gray-600">
-                {formatCurrency(item.currentValue)}
-              </td>
-              <td className="py-2 px-1 text-right text-sm text-gray-600">
-                {item.receivable?.quantity || 0}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-        <tfoot className="bg-gray-50">
-          <tr>
-            <td className="py-2 px-1 text-sm font-bold text-gray-700">Total</td>
-            <td className="py-2 px-1 text-right text-sm font-bold text-gray-700">
-              {asset.inventory.reduce((sum, item) => sum + item.quantity, 0)}
+  <div className="flex-1">
+    <table className="w-full h-full table-fixed">
+      <tbody>
+        {tableData.map((row, index) => (
+          <tr
+            key={index}
+            className={`bg-gradient-to-r ${row.bg} hover:shadow-md transition-all`}
+            style={{ height: `calc(100% / ${tableData.length})` }} // evenly divide height
+          >
+            <td className="px-3 text-sm md:text-base font-medium text-gray-700 align-middle">
+              {row.label}
             </td>
-            <td className="py-2 px-1 text-right text-sm font-bold text-gray-700">
-              {asset.inventory.reduce((sum, item) => sum + (item.currentValue || 0), 0)}
-            </td>
-            <td className="py-2 px-1 text-right text-sm font-bold text-gray-700">
-              {asset.inventory.reduce((sum, item) => sum + (item.receivable?.quantity || 0), 0)}
+            <td className="px-3 text-sm md:text-base text-right font-mono align-middle">
+              {row.value}
             </td>
           </tr>
-        </tfoot>
-      </table>
-    ) : (
-      <div className="flex flex-col items-center justify-center h-full text-gray-400">
-        <FiPackage className="text-4xl mb-2" />
-        <p>No inventory data available</p>
-      </div>
-    )}
+        ))}
+      </tbody>
+    </table>
   </div>
 </motion.div>
 
 
+    {/* Financial Chart - Now with proper height and no cutoff */}
+    <motion.div
+  initial={{ opacity: 0, x: 20 }}
+  animate={{ opacity: 1, x: 0 }}
+  whileHover={{ scale: 1.02 }}
+  transition={{ type: "spring", stiffness: 300 }}
+  className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden flex flex-col"
+  style={{
+    transformOrigin: 'center center',
+    transformStyle: 'preserve-3d'
+  }}
+>
+  <h2 className="text-lg font-semibold p-3 text-gray-800 border-b sticky top-0 bg-white z-10">
+    📊 Financial Summary
+  </h2>
+  <div 
+    className="flex-1 relative"
+    style={{
+      minHeight: 'calc(50vh - 10rem)',
+      padding: '1rem'
+    }}
+  >
+    <div className="absolute inset-0 p-2">
+      <Bar 
+        data={barChartData}
+        options={{
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { 
+            legend: { display: false },
+            tooltip: {
+              padding: 10,
+              bodyFont: {
+                size: 12
+              },
+              titleFont: {
+                size: 13
+              }
+            }
+          },
+          scales: {
+            y: { 
+              beginAtZero: true,
+              ticks: {
+                padding: 5,
+                font: {
+                  size: 11
+                }
+              },
+              grid: {
+                drawTicks: false
+              }
+            },
+            x: {
+              ticks: {
+                font: {
+                  size: 11
+                }
+              },
+              grid: {
+                display: false
+              }
+            }
+          },
+          layout: {
+            padding: {
+              top: 5,
+              bottom: 5,
+              left: 10,
+              right: 10
+            }
+          }
+        }}
+      />
+    </div>
+  </div>
+</motion.div>
 
+    {/* Pie Chart - Properly sized with no cutoff */}
+    <motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  whileHover={{ scale: 1.02 }}
+  className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden flex flex-col"
+  style={{
+    transformOrigin: 'center center', // Ensures scaling happens from center
+    transformStyle: 'preserve-3d' // Prevents child clipping
+  }}
+>
+  <h2 className="text-lg font-semibold p-3 text-gray-800 border-b">💰 Income & Assets</h2>
+  <div className="flex-1 relative" style={{ 
+    minHeight: 'calc(50vh - 10rem)', // Adjusted for better fit
+    padding: '1.5rem 1rem' // Balanced padding
+  }}>
+    <div className="absolute inset-0 flex items-center justify-center" 
+      style={{
+        paddingLeft: '1rem',
+        paddingRight: '2rem' // Extra right padding for legend
+      }}>
+      <Pie 
+        data={incomeAssetsData}
+        options={{
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: { 
+                boxWidth: 10,
+                padding: 12,
+                font: {
+                  size: 11 // Slightly smaller font
+                }
+              }
+            }
+          },
+          layout: {
+            padding: {
+              left: 10,
+              right: 25, // More space for legend
+              top: 10,
+              bottom: 10
+            }
+          },
+          elements: {
+            arc: {
+              borderWidth: 0 // Cleaner look
+            }
+          }
+        }}
+      />
+    </div>
+  </div>
+</motion.div>
+
+    {/* Inventory - With proper scrolling */}
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.6 }}
+      className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden flex flex-col"
+    >
+      <h2 className="text-lg font-semibold p-3 text-gray-800 border-b">📦 Inventory Details</h2>
+      <div className="overflow-y-auto flex-1">
+        {asset.inventory?.length > 0 ? (
+          <div className="relative">
+            <table className="w-full">
+              <thead className="sticky top-0 bg-white z-10">
+                <tr className="border-b">
+                  <th className="text-left py-2 px-3 text-sm font-medium text-gray-500">Item</th>
+                  <th className="text-right py-2 px-3 text-sm font-medium text-gray-500">Qty</th>
+                  <th className="text-right py-2 px-3 text-sm font-medium text-gray-500">Value</th>
+                  <th className="text-right py-2 px-3 text-sm font-medium text-gray-500">Receivables</th>
+                </tr>
+              </thead>
+              <tbody>
+                {asset.inventory.map((item, index) => (
+                  <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="py-2 px-3 text-sm font-medium text-gray-700 truncate max-w-[150px]">
+                      {item.name}
+                    </td>
+                    <td className="py-2 px-3 text-right text-sm text-gray-600">
+                      {item.quantity} {item.unit}
+                    </td>
+                    <td className="py-2 px-3 text-right text-sm font-mono text-gray-600">
+                      {formatCurrency(item.currentValue)}
+                    </td>
+                    <td className="py-2 px-3 text-right text-sm text-gray-600">
+                      {item.receivable?.quantity || 0}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot className="sticky bottom-0 bg-white border-t">
+                <tr>
+                  <td className="py-2 px-3 text-sm font-bold text-gray-700">Total</td>
+                  <td className="py-2 px-3 text-right text-sm font-bold text-gray-700">
+                    {asset.inventory.reduce((sum, item) => sum + item.quantity, 0)}
+                  </td>
+                  <td className="py-2 px-3 text-right text-sm font-bold text-gray-700">
+                    {formatCurrency(asset.inventory.reduce((sum, item) => sum + (item.currentValue || 0), 0))}
+                  </td>
+                  <td className="py-2 px-3 text-right text-sm font-bold text-gray-700">
+                    {asset.inventory.reduce((sum, item) => sum + (item.receivable?.quantity || 0), 0)}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        ) : (
+          <div className="flex-1 flex items-center justify-center text-gray-400">
+            <FiPackage className="text-4xl mb-2" />
+            <p>No inventory data</p>
+          </div>
+        )}
       </div>
+    </motion.div>
+  </div>
     </div>
   );
 };

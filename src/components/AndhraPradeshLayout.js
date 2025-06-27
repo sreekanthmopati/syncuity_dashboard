@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef  } from "react";
 import { FaChevronDown, FaChevronUp, FaDollarSign, FaChartBar,  FaUsers } from "react-icons/fa";
 import { Bar, Pie, Line } from "react-chartjs-2";
@@ -16,7 +15,7 @@ import { FaBuilding, FaHome } from 'react-icons/fa';
 
 Chart.register(...registerables);
 
-const DashboardLayout = () => {
+const AndhraPradeshLayout = () => {
   const [activeTab, setActiveTab] = useState("summary");
   const [expandedSections, setExpandedSections] = useState({
     revenue: true,
@@ -138,7 +137,18 @@ const DashboardLayout = () => {
         transition={{ duration: 0.5 }}
         className="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 gap-3"
       >
-        <h1 className="text-lg md:text-xl font-bold text-gray-800">NELLORE UNIT FINANCIAL REPORTS</h1>
+        <h1 className="text-xl md:text-xl font-medium tracking-normal">
+  <span className="bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
+    ANDHRA PRADESH
+  </span>{' '}
+  <span className="relative">
+    <span className="bg-gradient-to-r from-cyan-800 to-teal-800 bg-clip-text text-transparent">
+      FINANCIAL REPORT
+    </span>
+    <span className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-cyan-600/30 to-teal-600/30"></span>
+  </span>
+</h1>
+
 
         <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
           {/* Message Button */}
@@ -1230,23 +1240,4 @@ const DashboardLayout = () => {
   );
 };
 
-export default DashboardLayout;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default AndhraPradeshLayout;

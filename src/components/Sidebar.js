@@ -974,7 +974,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate,  useParams } from "react-router-dom";
 import { 
   FiChevronDown, FiChevronRight, FiX, FiSearch,
-  FiPieChart, FiHome, FiDollarSign, FiSettings,
+  FiPieChart, FiHome, FiDollarSign,
   FiUser, FiLayers,  FiBarChart2, FiDatabase
 } from 'react-icons/fi';
 
@@ -1901,7 +1901,7 @@ export const formatCurrency = (amount) => {
 
 const Sidebar = ({ activeAssetId }) => {
   const navigate = useNavigate();
-  const { assetId, unitId } = useParams();
+  const { assetId } = useParams();
 
   const [openSections, setOpenSections] = useState({
     units: true,
@@ -1910,22 +1910,35 @@ const Sidebar = ({ activeAssetId }) => {
   });
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
 
   const scrollbarStyle = `
     .custom-scrollbar::-webkit-scrollbar {
       width: 4px;
     }
     .custom-scrollbar::-webkit-scrollbar-track {
-      background: #1F2937;
+      background: rgba(30, 41, 59, 0.3);
     }
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #4ADE80;
+      background: rgba(100, 116, 139, 0.6);
       border-radius: 4px;
     }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: #22C55E;
+      background: rgba(148, 163, 184, 0.8);
     }
   `;
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (!mobile) setSidebarOpen(true);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const navigateToAsset = (assetId) => {
     const isCommercial = nelloreUnit.commercialAssets.some(a => a.id === assetId);
@@ -1936,6 +1949,7 @@ const Sidebar = ({ activeAssetId }) => {
       nonCommercialAssets: !isCommercial
     }));
     navigate(`/${assetId}`);
+    if (isMobile) setSidebarOpen(false);
   };
 
   const navigateToUnit = () => {
@@ -1944,12 +1958,21 @@ const Sidebar = ({ activeAssetId }) => {
       commercialAssets: false,
       nonCommercialAssets: false
     }));
-    navigate("/NelloreUnit");
+    navigate("/AP");
+    if (isMobile) setSidebarOpen(false);
   };
 
   const toggleSection = (section) => setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
   const isAssetActive = (id) => activeAssetId === id;
-  const isUnitActive = () => unitId === "NelloreUnit";
+  
+  const isUnitActive = () => {
+    return !assetId && (window.location.pathname === '/' || window.location.pathname === '/AP');
+  };
+
+  const isNelloreUnitActive = () => {
+    return window.location.pathname === '/NelloreUnit' || 
+           (assetId && nelloreUnit.commercialAssets.concat(nelloreUnit.nonCommercialAssets).some(a => a.id === assetId));
+  };
 
   useEffect(() => {
     if (assetId) {
@@ -1962,43 +1985,56 @@ const Sidebar = ({ activeAssetId }) => {
     }
   }, [assetId]);
 
+  if (!sidebarOpen && isMobile) {
+    return (
+      <button 
+        onClick={() => setSidebarOpen(true)}
+        className="fixed z-40 left-0 top-4 ml-2 p-2 rounded-r-lg bg-slate-800/90 shadow-lg border border-slate-700"
+      >
+        <FiChevronRight className="text-white" />
+      </button>
+    );
+  }
+
   return (
     <>
       <style>{scrollbarStyle}</style>
-      <div className="w-72 h-screen flex flex-col bg-gradient-to-b from-[#1E3A8A] via-[#1E40AF] to-[#1E3A8A] border-r border-blue-900 shadow-xl">
-        {/* Premium Header */}
-        <div className="p-5 pb-3 border-b border-blue-800">
+      <div className={`fixed md:relative z-50 w-64 h-screen flex flex-col bg-slate-900 border-r border-slate-700 shadow-xl transition-all duration-300 ${sidebarOpen ? 'left-0' : '-left-64'}`}>
+        {/* Mobile close button */}
+        {isMobile && (
+          <button 
+            onClick={() => setSidebarOpen(false)}
+            className="absolute right-0 top-0 mr-2 mt-2 p-1 rounded-full bg-slate-800/50 hover:bg-slate-700"
+          >
+            <FiX className="text-slate-300" />
+          </button>
+        )}
+
+        {/* Header */}
+        <div className="p-4 border-b border-slate-700 bg-gradient-to-r from-slate-800/50 to-slate-900/50">
           <div className="flex items-center space-x-3">
-            <div className="p-2.5 bg-white bg-opacity-10 backdrop-blur-sm rounded-lg border border-blue-700">
+            <div className="p-2 bg-blue-600 rounded-lg shadow">
               <FiBarChart2 className="text-white text-lg" />
             </div>
-            <h1 className="text-xl font-semibold text-white tracking-tight">
-              SYNCUITY
-            </h1>
+            <h1 className="text-lg font-semibold text-white tracking-tight">SYNCUITY</h1>
           </div>
         </div>
 
-        {/* Luxe Search */}
-        <div className="p-3 pt-2 border-b border-blue-800">
+        {/* Search */}
+        <div className="p-3 border-b border-slate-700">
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <FiSearch className="text-blue-300" />
-            </div>
+            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               placeholder="Search assets..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-8 py-2 rounded-lg bg-blue-900 bg-opacity-50 
-                        placeholder-blue-300 text-white text-sm focus:outline-none 
-                        focus:ring-1 focus:ring-blue-500 focus:bg-blue-800 border border-blue-700 
-                        transition-all duration-150"
+              className="w-full pl-9 pr-7 py-2 text-sm bg-slate-800 rounded-lg border border-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500/50 text-white placeholder-slate-400 transition-all"
             />
             {searchQuery && (
               <button 
                 onClick={() => setSearchQuery("")} 
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 
-                          text-blue-300 hover:text-white transition-colors"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
               >
                 <FiX className="text-sm" />
               </button>
@@ -2006,53 +2042,59 @@ const Sidebar = ({ activeAssetId }) => {
           </div>
         </div>
 
-        {/* Premium Navigation */}
-        <nav className="flex-1 overflow-y-auto py-2 px-2 custom-scrollbar space-y-1">
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto overflow-x-hidden py-1 px-2 custom-scrollbar space-y-1">
           {/* Dashboard */}
           <motion.div 
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className={`flex items-center p-2.5 rounded-lg cursor-pointer transition-all
-                      ${isUnitActive() ? 'bg-blue-800 bg-opacity-50' : 'hover:bg-blue-800 hover:bg-opacity-20'}`}
+            className={`flex items-center p-2 rounded-lg cursor-pointer transition-all
+                      ${isUnitActive() ? 'bg-blue-600/90 text-white shadow-md' : 'hover:bg-slate-800/70 text-slate-200'}`}
             onClick={navigateToUnit}
           >
-            <div className={`p-1.5 rounded-md ${isUnitActive() ? 'bg-blue-700 text-white' : 'bg-blue-900 bg-opacity-50 text-blue-200'}`}>
-              <FiPieChart className="text-lg" />
-            </div>
-            <span className={`ml-3 text-sm font-medium ${isUnitActive() ? 'text-white' : 'text-blue-100'}`}>
-              Dashboard
-            </span>
-            {isUnitActive() && (
-              <div className="ml-auto p-1 bg-blue-700 rounded-full">
-                <FiChevronRight className="text-white text-xs" />
-              </div>
-            )}
+            <FiPieChart className="text-lg" />
+            <span className="ml-3 text-sm font-medium">Dashboard</span>
+            {isUnitActive() && <FiChevronRight className="ml-auto text-sm" />}
           </motion.div>
 
           {/* Unit Section */}
-          <div className="mt-1 space-y-1">
+          <div className="space-y-1">
             <motion.div
               whileHover={{ scale: 1.02 }}
-              className={`flex items-center p-2.5 rounded-lg cursor-pointer transition-all
-                        ${isUnitActive() ? 'bg-blue-800 bg-opacity-50' : 'hover:bg-blue-800 hover:bg-opacity-20'}`}
-              onClick={() => toggleSection('units')}
+              className={`flex items-center p-2 rounded-lg cursor-pointer transition-all
+                        ${isNelloreUnitActive() ? 
+                          'bg-blue-900/40 border-l-4 border-blue-400 shadow-md' : 
+                          'hover:bg-slate-800/50 text-slate-200'}`}
+              onClick={() => {toggleSection('units'); navigate("/NelloreUnit");}}
             >
-              <div className={`p-1.5 rounded-md ${isUnitActive() ? 'bg-blue-700 text-white' : 'bg-blue-900 bg-opacity-50 text-blue-200'}`}>
+              <div className={`p-1.5 rounded-md ${
+                isNelloreUnitActive() ? 
+                'bg-blue-500 text-white shadow-sm' : 
+                'bg-slate-700/60 text-slate-300'
+              }`}>
                 <FiDatabase className="text-lg" />
               </div>
               <div className="ml-3">
-                <span className={`text-sm font-medium ${isUnitActive() ? 'text-white' : 'text-blue-100'}`}>
+                <span className={`text-sm font-medium ${
+                  isNelloreUnitActive() ? 'text-white' : 'text-slate-200'
+                }`}>
                   Nellore Unit
                 </span>
-                <span className="block text-xs text-blue-300 mt-0.5">
+                <span className={`block text-xs ${
+                  isNelloreUnitActive() ? 'text-blue-200' : 'text-slate-400'
+                } mt-0.5`}>
                   {nelloreUnit.commercialAssets.length + nelloreUnit.nonCommercialAssets.length} assets
                 </span>
               </div>
               <div className="ml-auto">
                 {openSections.units ? (
-                  <FiChevronDown className="text-blue-300 text-sm" />
+                  <FiChevronDown className={`text-sm ${
+                    isNelloreUnitActive() ? 'text-blue-300' : 'text-slate-400'
+                  }`} />
                 ) : (
-                  <FiChevronRight className="text-blue-300 text-sm" />
+                  <FiChevronRight className={`text-sm ${
+                    isNelloreUnitActive() ? 'text-blue-300' : 'text-slate-400'
+                  }`} />
                 )}
               </div>
             </motion.div>
@@ -2064,41 +2106,39 @@ const Sidebar = ({ activeAssetId }) => {
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="ml-2 pl-4 border-l-2 border-blue-700 space-y-1"
+                  className="ml-2 pl-3 border-l border-slate-700/50 space-y-1"
                 >
                   {[{
                     key: 'commercialAssets',
                     label: 'Commercial',
-                    icon: <FiDollarSign className="text-amber-300" />,
+                    icon: <FiDollarSign className="text-blue-400" />,
                     items: nelloreUnit.commercialAssets,
-                    activeColor: 'bg-amber-900 bg-opacity-30',
-                    borderColor: 'border-amber-700',
-                    textColor: 'text-amber-100',
-                    badgeColor: 'bg-amber-800 bg-opacity-50 text-amber-100'
+                    activeColor: 'bg-blue-900/30',
+                    borderColor: 'border-blue-500',
+                    textColor: 'text-blue-100'
                   }, {
                     key: 'nonCommercialAssets',
                     label: 'Non-Commercial',
-                    icon: <FiHome className="text-emerald-300" />,
+                    icon: <FiHome className="text-indigo-400" />,
                     items: nelloreUnit.nonCommercialAssets,
-                    activeColor: 'bg-emerald-900 bg-opacity-30',
-                    borderColor: 'border-emerald-700',
-                    textColor: 'text-emerald-100',
-                    badgeColor: 'bg-emerald-800 bg-opacity-50 text-emerald-100'
-                  }].map(({ key, label, icon, items, activeColor, borderColor, textColor, badgeColor }) => (
+                    activeColor: 'bg-indigo-900/30',
+                    borderColor: 'border-indigo-500',
+                    textColor: 'text-indigo-100'
+                  }].map(({ key, label, icon, items, activeColor, borderColor, textColor }) => (
                     <div key={key} className="space-y-1">
                       <motion.div
                         whileHover={{ scale: 1.02 }}
                         className={`flex items-center p-2 rounded-lg cursor-pointer transition-all
-                                  ${openSections[key] ? `${activeColor} border ${borderColor}` : 'hover:bg-blue-800 hover:bg-opacity-20'}`}
+                                  ${openSections[key] ? `${activeColor} border-l-2 ${borderColor} shadow-sm` : 'hover:bg-slate-800/40'}`}
                         onClick={() => toggleSection(key)}
                       >
-                        <div className={`p-1 rounded ${openSections[key] ? 'bg-white bg-opacity-10' : 'bg-blue-900 bg-opacity-30'}`}>
+                        <div className={`p-1 rounded-md ${openSections[key] ? 'bg-slate-700/30' : 'bg-slate-700/50'}`}>
                           {icon}
                         </div>
-                        <span className={`ml-2 text-sm font-medium ${openSections[key] ? textColor : 'text-blue-100'}`}>
+                        <span className={`ml-2 text-sm ${openSections[key] ? `font-semibold ${textColor}` : 'text-slate-300'}`}>
                           {label}
                         </span>
-                        <span className={`ml-auto text-xs px-2 py-0.5 rounded-full ${badgeColor}`}>
+                        <span className="ml-auto text-xs px-2 py-0.5 rounded-full bg-slate-700/50 text-slate-300">
                           {items.length}
                         </span>
                       </motion.div>
@@ -2110,7 +2150,7 @@ const Sidebar = ({ activeAssetId }) => {
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
                             transition={{ duration: 0.2 }}
-                            className="ml-2 pl-4 border-l-2 border-blue-700 space-y-1"
+                            className="ml-2 pl-3 border-l border-slate-700/30 space-y-1"
                           >
                             {items.map(asset => (
                               <motion.div
@@ -2122,18 +2162,16 @@ const Sidebar = ({ activeAssetId }) => {
                                 }}
                                 className={`p-2 rounded-lg cursor-pointer transition-all flex flex-col
                                           ${isAssetActive(asset.id) 
-                                            ? `${activeColor} border ${borderColor}` 
-                                            : 'hover:bg-blue-800 hover:bg-opacity-20'}`}
+                                            ? `${activeColor} border-l-2 ${borderColor} font-medium ${textColor} shadow-inner` 
+                                            : 'hover:bg-slate-800/30 text-slate-200'}`}
                               >
                                 <div className="flex justify-between items-center">
-                                  <span className={`text-sm truncate ${isAssetActive(asset.id) ? textColor : 'text-blue-100'}`}>
-                                    {asset.type}
-                                  </span>
-                                  <span className={`text-xs px-2 py-0.5 rounded-full ${badgeColor}`}>
+                                  <span>{asset.type}</span>
+                                  <span className={`text-xs px-2 py-0.5 rounded-full ${isAssetActive(asset.id) ? 'bg-blue-600/30 text-blue-100' : 'bg-slate-700/50 text-slate-300'}`}>
                                     {formatCurrency(asset.financials.revenue)}
                                   </span>
                                 </div>
-                                <div className="mt-1 flex justify-between text-[0.65rem] text-blue-300">
+                                <div className="mt-1 flex justify-between text-[0.65rem] text-slate-400">
                                   <span>PAN: {asset.pan || 'N/A'}</span>
                                   <span>GST: {asset.gst || 'N/A'}</span>
                                 </div>
@@ -2149,41 +2187,43 @@ const Sidebar = ({ activeAssetId }) => {
             </AnimatePresence>
           </div>
 
-          {/* Additional Menu */}
-          <div className="mt-4 space-y-1">
-            <motion.div 
-              whileHover={{ scale: 1.02 }}
-              className="flex items-center p-2.5 rounded-lg cursor-pointer hover:bg-blue-800 hover:bg-opacity-20 transition-all"
-            >
-              <div className="p-1.5 rounded-md bg-blue-900 bg-opacity-50 text-blue-200">
-                <FiLayers className="text-lg" />
-              </div>
-              <span className="ml-3 text-sm font-medium text-blue-100">All Units</span>
-            </motion.div>
-            <motion.div 
-              whileHover={{ scale: 1.02 }}
-              className="flex items-center p-2.5 rounded-lg cursor-pointer hover:bg-blue-800 hover:bg-opacity-20 transition-all"
-            >
-              <div className="p-1.5 rounded-md bg-blue-900 bg-opacity-50 text-blue-200">
-                <FiSettings className="text-lg" />
-              </div>
-              <span className="ml-3 text-sm font-medium text-blue-100">Settings</span>
-            </motion.div>
-          </div>
+          {/* Additional Units */}
+          <motion.div
+  whileHover={{ scale: 1.02 }}
+  className={`flex items-center p-2 rounded-lg cursor-pointer transition-all
+    hover:bg-green-900/40 hover:border-l-4 hover:border-green-400 hover:shadow-md text-slate-200`}
+  
+>
+  <div className="p-1.5 rounded-md bg-green-500 text-white shadow-sm">
+    <FiLayers className="text-lg" />
+  </div>
+  <div className="ml-3">
+    <span className="text-sm font-medium text-white">
+      Srikakulam Unit
+    </span>
+    <span className="block text-xs text-green-200 mt-0.5">
+      Data loading soon...
+    </span>
+  </div>
+  <div className="ml-auto">
+    <FiChevronRight className="text-sm text-green-300" />
+  </div>
+</motion.div>
+
         </nav>
 
-        {/* Premium User Profile */}
-        <div className="mt-auto p-3 border-t border-blue-800">
+        {/* User Profile */}
+        <div className="mt-auto p-3 border-t border-slate-700 bg-gradient-to-t from-slate-800/70 to-slate-900/50">
           <motion.div 
             whileHover={{ scale: 1.02 }}
-            className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-blue-800 hover:bg-opacity-20 transition-all"
+            className="flex items-center p-1.5 rounded-lg hover:bg-slate-800/50 cursor-pointer transition-colors"
           >
-            <div className="p-1.5 bg-white bg-opacity-20 rounded-md border border-blue-700">
+            <div className="p-1.5 bg-blue-600 rounded-md shadow">
               <FiUser className="text-white text-sm" />
             </div>
-            <div className="ml-3">
+            <div className="ml-2">
               <p className="text-sm font-medium text-white">Admin User</p>
-              <p className="text-xs text-blue-300">admin@analtica.com</p>
+              <p className="text-xs text-slate-400">admin@analtica.com</p>
             </div>
           </motion.div>
         </div>

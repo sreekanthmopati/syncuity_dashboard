@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import AssetPage from './components/AssetPage';
 // import UnitDashboard from './UnitDashboard';
 import DashboardLayout from './components/DashboardLayout';
+import AndhraPradeshLayout from './components/AndhraPradeshLayout';
 // import RevenuePieChart from './components/RevenuePieChart';
 
 
@@ -20,6 +21,7 @@ function App() {
             {/* <Route path="/unit/:unitId" element={<UnitDashboard />} /> */}
             <Route path="/:id" element={<AssetPage setActiveAsset={setActiveAssetId}/>} />
             <Route path="/NelloreUnit" element={<DashboardLayout />} />
+            <Route path="/AP" element={<AndhraPradeshLayout />} />
             {/* <Route path="/rp" element={<RevenuePieChart />} /> */}
             
           </Routes>
