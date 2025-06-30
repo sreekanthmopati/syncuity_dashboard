@@ -2,28 +2,30 @@ import { FiBriefcase, FiCreditCard, FiFileText, FiCheckCircle, FiAlertCircle, Fi
 import { FaPaperPlane } from 'react-icons/fa';
 import { motion } from "framer-motion";
 
-// Status generator utility
+// Track which statuses have already been used
+const usedStatusTypes = new Set();
+
 const generateUpdateStatus = (assetId) => {
   // Seed random based on asset ID for consistency
   const seed = Array.from(assetId).reduce((hash, char) => char.charCodeAt(0) + (hash << 6) + (hash << 16) - hash, 0);
-  const pseudoRandom = (Math.sin(seed) + 1) / 2; // Returns 0-1
-  
+  const pseudoRandom = (Math.sin(seed) + 1) / 2;
+
   const now = new Date();
   const statusTypes = [
-    { // Recent (0-2 days)
+    {
       name: 'Recent',
       maxDays: 2,
       color: 'from-green-600 to-green-800',
       icon: <FiCheckCircle className="text-green-300 text-sm" />
     },
-    { // Stale (3-7 days)
+    {
       name: 'Stale',
       minDays: 3,
       maxDays: 7,
       color: 'from-blue-600 to-blue-800',
       icon: <FiAlertCircle className="text-blue-300 text-sm" />
     },
-    { // Outdated (8+ days)
+    {
       name: 'Outdated',
       minDays: 8,
       maxDays: 14,
@@ -32,25 +34,32 @@ const generateUpdateStatus = (assetId) => {
     }
   ];
 
-  // Select status weighted 60% Recent, 30% Stale, 10% Outdated
+  // Force usage of all 3 types at least once
   let status;
-  if (pseudoRandom < 0.6) {
-    status = statusTypes[0];
-  } else if (pseudoRandom < 0.9) {
-    status = statusTypes[1];
+  const remainingTypes = statusTypes.filter(s => !usedStatusTypes.has(s.name));
+  if (remainingTypes.length > 0) {
+    // Pick one from unused
+    status = remainingTypes[0];
+    usedStatusTypes.add(status.name);
   } else {
-    status = statusTypes[2];
+    // Fallback to original probability
+    if (pseudoRandom < 0.6) {
+      status = statusTypes[0];
+    } else if (pseudoRandom < 0.9) {
+      status = statusTypes[1];
+    } else {
+      status = statusTypes[2];
+    }
   }
 
-  // Generate random days within status range
-  const daysAgo = status.minDays 
+  // Generate random days within the selected status's range
+  const daysAgo = status.minDays !== undefined
     ? status.minDays + Math.floor(pseudoRandom * (status.maxDays - status.minDays))
     : Math.floor(pseudoRandom * (status.maxDays + 1));
 
   const lastUpdated = new Date(now);
   lastUpdated.setDate(now.getDate() - daysAgo);
 
-  // Improved date display text
   let displayText;
   if (daysAgo === 0) {
     displayText = 'Today';
@@ -69,9 +78,10 @@ const generateUpdateStatus = (assetId) => {
       year: 'numeric'
     }),
     daysAgo,
-    displayText // Using the new display text
+    displayText
   };
 };
+
 
 const AssetHeader = ({ asset, setShowMessageForm }) => {
   const updateStatus = generateUpdateStatus(asset.id);

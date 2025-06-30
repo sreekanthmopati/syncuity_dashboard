@@ -1293,8 +1293,8 @@ export const nelloreUnit = {
   nonCommercialAssets: [
     // Kalyanamandapam
     {
-      type: "Kalyanamandapam",
-      id: "kalyanamandapam1",
+      type: "mandapam",
+      id: "mandapam1",
       pan: "AAAKM1234Q",
       gst: "37AAAKM1234Q1ZV",
       financials: {
