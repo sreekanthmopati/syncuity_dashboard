@@ -937,9 +937,10 @@ import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, registerables } from 'chart.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import {  FaTimes, FaPaperPlane } from 'react-icons/fa';
-import { FiBriefcase, FiCreditCard, FiFileText, FiClock } from 'react-icons/fi';
 import { FiPackage } from 'react-icons/fi';
+
 import { useState } from 'react';
+import AssetHeader from './AssetHeader';
 ChartJS.register(...registerables);
 
 const AssetPage = ({ setActiveAsset }) => {
@@ -1080,64 +1081,12 @@ const AssetPage = ({ setActiveAsset }) => {
   //     bar: { borderSkipped: false }
   //   }
   // };
-  const lastUpdatedDate = '12/05/2025';
+ 
 
   return (
     <div className="p-1 h-screen flex flex-col bg-grey overflow-hidden relative">
       {/* Asset Header with Message Button */}
-      <motion.div
-  initial={{ opacity: 0, y: -10 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.3, ease: "easeOut" }}
-  className="bg-gradient-to-r from-blue-700 to-blue-900 p-3 rounded-lg mb-4 shadow-lg border border-blue-500/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
->
-  <div className="flex-1 min-w-0">
-    <div className="flex items-center gap-2">
-      <div className="p-1.5 bg-white/10 rounded-md backdrop-blur-sm border border-white/10">
-        <FiBriefcase className="text-white text-base" />
-      </div>
-      <div>
-        <h1 className="text-xl font-semibold text-white tracking-tight">
-          {asset.type}
-          <span className="text-blue-100 font-mono ml-1.5 opacity-90 text-sm">#{asset.id}</span>
-        </h1>
-        <div className="flex flex-wrap gap-1.5 mt-1.5">
-          <div className="bg-white/15 backdrop-blur-sm px-2 py-1 rounded-md text-white text-xs font-medium flex items-center gap-1 border border-white/10">
-            <FiCreditCard className="opacity-80 text-xs" />
-            <span>PAN:</span>
-            <span className="font-mono">{asset.pan || 'N/A'}</span>
-          </div>
-          <div className="bg-white/15 backdrop-blur-sm px-2 py-1 rounded-md text-white text-xs font-medium flex items-center gap-1 border border-white/10">
-            <FiFileText className="opacity-80 text-xs" />
-            <span>GST:</span>
-            <span className="font-mono">{asset.gst || 'N/A'}</span>
-          </div>
-          {lastUpdatedDate && (
-            <div className="bg-white/15 backdrop-blur-sm px-2 py-1 rounded-md text-white text-xs font-medium flex items-center gap-1 border border-white/10">
-              <FiClock className="opacity-80 text-xs" />
-              <span>Updated:</span>
-              <span className="font-mono">{lastUpdatedDate}</span>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <motion.button
-    onClick={() => setShowMessageForm(true)}
-    whileHover={{ 
-      scale: 1.03,
-      backgroundColor: 'rgba(255,255,255,0.25)'
-    }}
-    whileTap={{ scale: 0.97 }}
-    transition={{ duration: 0.15 }}
-    className="flex-shrink-0 flex items-center px-3 py-1.5 bg-white/20 backdrop-blur-sm rounded-lg text-white hover:bg-white/30 transition-all duration-200 shadow-md hover:shadow-lg border border-white/20 text-xs sm:text-sm"
-  >
-    <FaPaperPlane className="mr-1.5 text-xs sm:text-sm" />
-    <span className="font-medium">Message RI</span>
-  </motion.button>
-</motion.div>
+      <AssetHeader asset={asset} setShowMessageForm={setShowMessageForm}/>
 
       {/* Message Modal */}
       <AnimatePresence>

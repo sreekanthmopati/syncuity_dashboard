@@ -2094,10 +2094,11 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
           <div className="space-y-1">
             <motion.div
               whileHover={{ scale: 1.02 }}
-              className={`flex items-center p-2 rounded-lg cursor-pointer transition-all
-                        ${isNelloreUnitActive() ? 
-                          'bg-blue-900/40 border-l-4 border-blue-400 shadow-md' : 
-                          'hover:bg-slate-800/50 text-slate-200'}`}
+              className={`flex items-center p-2 rounded-lg cursor-pointer transition-all border-l-4 border-b
+                ${isNelloreUnitActive() ? 
+                  'bg-blue-900/40 border-blue-400 border-b-blue-500 shadow-md' : 
+                  'hover:bg-slate-800/50 border-slate-700/70 border-b-slate-700/50 text-slate-200'}`}
+              
               onClick={navigateToNelloreUnit}
             >
               <div className={`p-1.5 rounded-md ${
@@ -2193,10 +2194,10 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
                                   e.stopPropagation();
                                   navigateToAsset(asset.id);
                                 }}
-                                className={`p-2 rounded-lg cursor-pointer transition-all flex flex-col
-                                          ${isAssetActive(asset.id) 
-                                            ? `${activeColor} border-l-2 ${borderColor} font-medium ${textColor} shadow-inner` 
-                                            : 'hover:bg-slate-800/30 text-slate-200'}`}
+                                className={`p-2 rounded-lg cursor-pointer transition-all flex flex-col 
+                                  border ${isAssetActive(asset.id) 
+                                    ? `border-slate-700 ${activeColor} border-l-2 ${borderColor} font-medium ${textColor} shadow-inner` 
+                                    : 'border-slate-700/50 hover:bg-slate-800/30 text-slate-200 hover:border-slate-600'}`}
                               >
                                 <div className="flex justify-between items-center">
                                   <span>{asset.type}</span>
@@ -2222,7 +2223,8 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
 
           <motion.div
   whileHover={{ scale: 1.02 }}
-  className="flex items-center p-2 rounded-lg cursor-pointer transition-all hover:bg-slate-800/50 text-slate-200"
+  className={`flex items-center p-2 rounded-lg cursor-pointer transition-all border-l-4 border-b 
+    hover:bg-slate-800/50 border-slate-700/70 border-b-slate-700/50 text-slate-200`}
 >
   <div className="p-1.5 rounded-md bg-slate-700/60 text-slate-300">
     <FiDatabase className="text-lg" />
@@ -2235,6 +2237,7 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
     <FiChevronRight className="text-sm text-slate-400" />
   </div>
 </motion.div>
+
         </nav>
 
         <div className="mt-auto p-3 border-t border-slate-700 bg-gradient-to-t from-slate-800/70 to-slate-900/50">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef  } from "react";
-import { FaChevronDown, FaChevronUp, FaDollarSign, FaChartBar,  FaUsers } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaDollarSign, FaChartBar } from "react-icons/fa";
 import { Bar, Pie, Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 import { motion } from "framer-motion";
@@ -11,6 +11,11 @@ import { FiBarChart2,FiChevronRight } from 'react-icons/fi';
 import {  FaArrowCircleDown, FaArrowCircleUp } from 'react-icons/fa';
 import { FaLandmark, FaWallet,  FaChartLine } from 'react-icons/fa';
 import { FaBuilding, FaHome } from 'react-icons/fa';
+import { 
+    FaExchangeAlt,
+    FaPiggyBank,
+    FaCoins,
+  } from "react-icons/fa";
 
 
 Chart.register(...registerables);
@@ -137,17 +142,7 @@ const AndhraPradeshLayout = () => {
         transition={{ duration: 0.5 }}
         className="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 gap-3"
       >
-        <h1 className="text-xl md:text-xl font-medium tracking-normal">
-  <span className="bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
-    ANDHRA PRADESH
-  </span>{' '}
-  <span className="relative">
-    <span className="bg-gradient-to-r from-cyan-800 to-teal-800 bg-clip-text text-transparent">
-      FINANCIAL REPORT
-    </span>
-    <span className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-cyan-600/30 to-teal-600/30"></span>
-  </span>
-</h1>
+        <h1 className="text-lg md:text-xl font-bold text-gray-800">ANDHRA PRADESH FINANCIAL REPORT</h1>
 
 
         <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
@@ -1150,75 +1145,81 @@ const AndhraPradeshLayout = () => {
   variants={cardVariants}
   initial="hidden"
   animate="visible"
-  transition={{ duration: 0.5, delay: 0.7 }} 
+  transition={{ duration: 0.5, delay: 0.7 }}
   whileHover={{ y: -3 }}
-  className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-purple-500 relative overflow-hidden"
+  className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-blue-500 relative overflow-hidden"
 >
   {/* Subtle background pattern */}
-  <div className="absolute top-0 right-0 w-16 h-16 bg-purple-50 rounded-bl-full opacity-30"></div>
+  <div className="absolute top-0 right-0 w-16 h-16 bg-blue-50 rounded-bl-full opacity-30"></div>
   
   <div className="flex items-center justify-between mb-3 relative z-10">
-    <h3 className="text-sm font-semibold text-gray-700 tracking-wide">EMPLOYEE METRICS</h3>
+    <h3 className="text-sm font-semibold text-gray-700 tracking-wide">INVESTMENT TRANSACTIONS</h3>
     <motion.div
       animate={{ 
         rotate: [0, 20, -20, 0],
         scale: [1, 1.1, 1]
       }}
       transition={{ repeat: Infinity, duration: 3 }}
-      className="p-2 bg-purple-100 rounded-full"
+      className="p-2 bg-blue-100 rounded-full"
     >
-      <FaUsers className="text-purple-600 text-lg" />
+      <FaExchangeAlt className="text-blue-600 text-lg" />
     </motion.div>
   </div>
 
   <div className="space-y-3 relative z-10">
-    {[
-      { 
-        label: "Total Wages", 
-        value: nelloreUnit.financials.employeeWages,
-        icon: <FaDollarSign className="inline mr-1 text-purple-500 text-xs" />
-      },
-      { 
-        label: "Total Employees", 
-        value: Math.round(nelloreUnit.financials.employeeWages / 15000),
-        icon: <FaUsers className="inline mr-1 text-purple-500 text-xs" />
-      }
-    ].map((item, index) => (
-      <motion.div 
-        key={index}
-        whileHover={{ x: 5 }}
-        transition={{ type: "spring", stiffness: 300 }}
-        className="p-2 rounded-lg hover:bg-purple-50 transition-colors duration-200 border-b border-purple-50 last:border-0"
-      >
-        <div className="flex justify-between items-center">
-          <div>
-            <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-              {item.icon}{item.label}
-            </h4>
-            <p className="text-lg font-bold text-gray-800 mt-1">
-              {typeof item.value === 'number' ? 
-                item.value.toLocaleString('en-IN') : 
-                item.value}
-            </p>
-          </div>
-          {index === 1 && (
-            <div className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium">
-              ~₹15k/employee
-            </div>
-          )}
+    {/* Main Investment Summary - Compact version to match height */}
+    <motion.div 
+      whileHover={{ x: 5 }}
+      transition={{ type: "spring", stiffness: 300 }}
+      className="p-2 rounded-lg hover:bg-blue-50 transition-colors duration-200 border-b border-blue-50"
+    >
+      <div className="flex justify-between items-center">
+        <div className="flex items-center">
+          <FaPiggyBank className="text-blue-500 mr-2 text-sm" />
+          <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wider">Investments</h4>
         </div>
-        {index === 0 && (
-          <div className="mt-2 h-1 w-full bg-gray-200 rounded-full overflow-hidden">
-            <motion.div 
-              initial={{ width: 0 }}
-              animate={{ width: `${Math.min(100, item.value / 100000)}%` }}
-              transition={{ delay: 0.5, duration: 1 }}
-              className="h-full bg-gradient-to-r from-purple-400 to-purple-600"
-            />
-          </div>
-        )}
-      </motion.div>
-    ))}
+        <div className="text-right">
+          <p className="text-red-500 text-sm font-medium">Dr ₹525,000.00</p>
+          <p className="text-green-600 text-sm font-medium">Cr ₹587,500.00</p>
+        </div>
+      </div>
+    </motion.div>
+
+    {/* Gold Investment - Compact version */}
+    <motion.div 
+      whileHover={{ x: 5 }}
+      transition={{ type: "spring", stiffness: 300 }}
+      className="p-2 rounded-lg hover:bg-blue-50 transition-colors duration-200 border-b border-blue-50"
+    >
+      <div className="flex justify-between items-center">
+        <div className="flex items-center">
+          <FaCoins className="text-yellow-500 mr-2 text-sm" />
+          <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wider">Gold</h4>
+        </div>
+        <div className="text-right">
+          <p className="text-gray-400 text-sm">Dr ₹0.00</p>
+          <p className="text-green-600 text-sm font-medium">Cr ₹587,500.00</p>
+        </div>
+      </div>
+    </motion.div>
+
+    {/* Other Investments - Compact version */}
+    <motion.div 
+      whileHover={{ x: 5 }}
+      transition={{ type: "spring", stiffness: 300 }}
+      className="p-2 rounded-lg hover:bg-blue-50 transition-colors duration-200"
+    >
+      <div className="flex justify-between items-center">
+        <div className="flex items-center">
+          <FaChartLine className="text-blue-400 mr-2 text-sm" />
+          <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wider">Other Investments</h4>
+        </div>
+        <div className="text-right">
+          <p className="text-red-500 text-sm font-medium">Dr ₹525,000.00</p>
+          <p className="text-gray-400 text-sm">Cr ₹0.00</p>
+        </div>
+      </div>
+    </motion.div>
   </div>
 
   {/* Glow effect */}
@@ -1226,7 +1227,7 @@ const AndhraPradeshLayout = () => {
     initial={{ opacity: 0 }}
     animate={{ opacity: 0.3 }}
     transition={{ delay: 1 }}
-    className="absolute -bottom-4 -right-4 w-16 h-16 bg-purple-300 rounded-full filter blur-xl"
+    className="absolute -bottom-4 -right-4 w-16 h-16 bg-blue-300 rounded-full filter blur-xl"
   />
 </motion.div>
 
