@@ -1902,6 +1902,7 @@ export const formatCurrency = (amount) => {
 const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
   const navigate = useNavigate();
   const { assetId } = useParams();
+  
 
   const [openSections, setOpenSections] = useState({
     units: false,
@@ -1928,6 +1929,7 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
       background: rgba(148, 163, 184, 0.8);
     }
   `;
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -2078,7 +2080,7 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
           </div>
         </div>
 
-        <nav className="flex-1 overflow-y-auto overflow-x-hidden py-1 px-2 custom-scrollbar space-y-1">
+        <nav  className="flex-1 overflow-y-auto overflow-x-hidden py-1 px-2 custom-scrollbar space-y-1">
           <motion.div 
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}

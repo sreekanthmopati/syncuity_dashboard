@@ -1153,7 +1153,7 @@ const AndhraPradeshLayout = () => {
   <div className="absolute top-0 right-0 w-16 h-16 bg-blue-50 rounded-bl-full opacity-30"></div>
   
   <div className="flex items-center justify-between mb-3 relative z-10">
-    <h3 className="text-sm font-semibold text-gray-700 tracking-wide">INVESTMENT TRANSACTIONS</h3>
+    <h3 className="text-sm font-semibold text-gray-700 tracking-wide">INVESTMENTS</h3>
     <motion.div
       animate={{ 
         rotate: [0, 20, -20, 0],

@@ -16,7 +16,8 @@ function App() {
     <Router>
       <div className="flex">
         <Sidebar activeAssetId={activeAssetId} setActiveAssetId={setActiveAssetId}/>
-        <div className="flex-1">
+        <div  
+           className="flex-1">
           <Routes>
             {/* <Route path="/unit/:unitId" element={<UnitDashboard />} /> */}
             <Route path="/:id" element={<AssetPage setActiveAsset={setActiveAssetId}/>} />
