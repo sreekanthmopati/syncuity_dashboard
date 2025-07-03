@@ -16,7 +16,7 @@ import {
     FaPiggyBank,
     FaCoins,
   } from "react-icons/fa";
-
+  import { useNavigate } from "react-router-dom";
 
 Chart.register(...registerables);
 
@@ -27,6 +27,7 @@ const AndhraPradeshLayout = () => {
     expenses: true,
     assets: true
   });
+  const navigate = useNavigate();
   const [showMessageForm, setShowMessageForm] = useState(false);
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -59,11 +60,37 @@ const AndhraPradeshLayout = () => {
   };
 
   // Chart data configurations
+//   const revenueChartData = {
+//     labels: [
+//       ...nelloreUnit.commercialAssets.map(asset => asset.id),
+//       ...nelloreUnit.nonCommercialAssets.map(asset => asset.id)
+//     ],
+//     datasets: [{
+//       label: "Revenue (₹)",
+//       data: [
+//         ...nelloreUnit.commercialAssets.map(asset => asset.financials.revenue),
+//         ...nelloreUnit.nonCommercialAssets.map(asset => asset.financials.revenue || 0)
+//       ],
+//       backgroundColor: [
+//         '#3B82F6', '#6366F1', '#8B5CF6', '#EC4899', '#F43F5E', 
+//         '#10B981', '#14B8A6', '#06B6D4', '#0EA5E9', '#1D4ED8'
+//       ],
+//       borderColor: '#ffffff',
+//       borderWidth: 2,
+//       hoverBackgroundColor: [
+//         '#60A5FA', '#818CF8', '#A78BFA', '#F472B6', '#FB7185',
+//         '#34D399', '#2DD4BF', '#22D3EE', '#38BDF8', '#3B82F6'
+//       ],
+//       hoverBorderWidth: 3
+//     }]
+//   };
+const assetLabels = [
+    ...nelloreUnit.commercialAssets.map(asset => ({ id: asset.id, label: asset.id })),
+    ...nelloreUnit.nonCommercialAssets.map(asset => ({ id: asset.id, label: asset.id }))
+  ];
+
   const revenueChartData = {
-    labels: [
-      ...nelloreUnit.commercialAssets.map(asset => asset.id),
-      ...nelloreUnit.nonCommercialAssets.map(asset => asset.id)
-    ],
+    labels: assetLabels.map(a => a.label),
     datasets: [{
       label: "Revenue (₹)",
       data: [
@@ -82,6 +109,16 @@ const AndhraPradeshLayout = () => {
       ],
       hoverBorderWidth: 3
     }]
+  };
+
+  // Click handler for chart
+  const handleBarClick = (event, elements) => {
+    if (elements.length > 0) {
+      const index = elements[0].index;
+      const assetId = assetLabels[index].id;
+      
+      navigate(`/${assetId}`);
+    }
   };
 
   const expenseChartData = {
@@ -515,7 +552,7 @@ const AndhraPradeshLayout = () => {
           {/* Middle Column - Main Charts */}
           <div className="lg:col-span-2 flex flex-col h-[90vh] gap-2">
   {/* Revenue by Asset */}
-  <motion.div
+  {/* <motion.div
     variants={cardVariants}
     initial="hidden"
     animate="visible"
@@ -595,7 +632,84 @@ const AndhraPradeshLayout = () => {
         />
       </motion.div>
     )}
-  </motion.div>
+  </motion.div> */}
+  <motion.div 
+        variants={cardVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="flex-1 bg-white p-3 rounded-lg shadow-md hover:shadow-lg transition-shadow flex flex-col overflow-hidden"
+      >
+        <div className="flex items-center justify-between mb-2 pt-[2%]">
+          <h3 className="text-xs font-semibold text-gray-700">Revenue by Asset</h3>
+          <motion.button 
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => toggleSection("revenue")}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            {expandedSections.revenue ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
+          </motion.button>
+        </div>
+  
+        {expandedSections.revenue && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="flex-1"
+          >
+            <Bar 
+              data={revenueChartData}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                onClick: handleBarClick,
+                plugins: {
+                  legend: {
+                    position: 'top',
+                    labels: { font: { size: 10 }, boxWidth: 10 }
+                  },
+                  tooltip: {
+                    callbacks: {
+                      label: context =>
+                        ' ₹' + new Intl.NumberFormat('en-IN').format(context.raw)
+                    },
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: { size: 11 },
+                    bodyFont: { size: 10 },
+                    padding: 8,
+                    displayColors: true
+                  }
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    ticks: {
+                      callback: value => '₹' + new Intl.NumberFormat('en-IN').format(value),
+                      font: { size: 8 }
+                    },
+                    grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                  },
+                  x: {
+                    grid: { display: false },
+                    ticks: {
+                      font: { size: 8 },
+                      callback: function(value, index) {
+                        return index % 2 === 0 ? this.getLabelForValue(value) : '';
+                      }
+                    }
+                  }
+                },
+                animation: {
+                  duration: 2000,
+                  easing: 'easeOutQuart'
+                }
+              }}
+            />
+          </motion.div>
+        )}
+      </motion.div>
 
   {/* Expenses Breakdown */}
   <motion.div

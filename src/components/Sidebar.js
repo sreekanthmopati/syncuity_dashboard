@@ -971,7 +971,7 @@
 
 
 import React, { useState, useEffect } from "react";
-import { useNavigate,  useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { 
   FiChevronDown, FiChevronRight, FiX, FiSearch,
   FiPieChart, FiHome, FiDollarSign,
@@ -1901,7 +1901,6 @@ export const formatCurrency = (amount) => {
 
 const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
   const navigate = useNavigate();
-  const { assetId } = useParams();
   
 
   const [openSections, setOpenSections] = useState({
@@ -2000,10 +1999,13 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
   const isAssetActive = (id) => {
     return window.location.pathname === `/${id}`;
   };
+  const location = useLocation();
 
   useEffect(() => {
-    const path = window.location.pathname;
-    
+    const path = location.pathname;
+    const assetId = path.startsWith('/') ? path.split('/')[1] : null;
+    console.log("Sidebar useEffect triggered. Current path:", path, "assetId:", assetId);
+  
     if (path === '/' || path === '/AP') {
       setOpenSections({
         units: false,
@@ -2024,8 +2026,8 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
         nonCommercialAssets: !isCommercial
       });
     }
-  }, [assetId]);
-
+  }, [location.pathname]);
+  
   if (!sidebarOpen && isMobile) {
     return (
       <button 
@@ -2252,7 +2254,7 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
             </div>
             <div className="ml-2">
               <p className="text-sm font-medium text-white">Admin User</p>
-              <p className="text-xs text-slate-400">admin@analtica.com</p>
+              <p className="text-xs text-slate-400">admin@gmail.com</p>
             </div>
           </motion.div>
         </div>
