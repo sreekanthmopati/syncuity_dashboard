@@ -259,7 +259,7 @@ const DashboardLayout = () => {
                       <FaPaperPlane className="text-green-600 text-xl" />
                     </div>
                     <h4 className="text-lg font-bold text-gray-800 mb-1">Message Sent!</h4>
-                    <p className="text-sm text-gray-600">All asset owners will receive your message.</p>
+                    <p className="text-sm text-gray-600">All RIs will receive your message.</p>
                   </motion.div>
                 ) : (
                   <>

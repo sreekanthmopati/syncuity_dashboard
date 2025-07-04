@@ -1130,7 +1130,7 @@ const AssetPage = ({ setActiveAsset }) => {
                     <h4 className="text-xl font-bold text-gray-800 mb-1">
                       Message Sent!
                     </h4>
-                    <p className="text-gray-600">The asset owner will respond soon.</p>
+                    <p className="text-gray-600">The RI will respond soon.</p>
                   </motion.div>
                 ) : (
                   <>
