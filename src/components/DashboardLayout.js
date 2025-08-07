@@ -18,9 +18,16 @@ import {
   FaCoins,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { configureChartDefaults } from './setupCharts';
+
+
+
+
+
 
 
 Chart.register(...registerables);
+configureChartDefaults();
 
 const DashboardLayout = () => {
   const [activeTab, setActiveTab] = useState("summary");
@@ -62,30 +69,7 @@ const DashboardLayout = () => {
   };
 
   // Chart data configurations
-  // const revenueChartData = {
-  //   labels: [
-  //     ...nelloreUnit.commercialAssets.map(asset => asset.id),
-  //     ...nelloreUnit.nonCommercialAssets.map(asset => asset.id)
-  //   ],
-  //   datasets: [{
-  //     label: "Revenue (₹)",
-  //     data: [
-  //       ...nelloreUnit.commercialAssets.map(asset => asset.financials.revenue),
-  //       ...nelloreUnit.nonCommercialAssets.map(asset => asset.financials.revenue || 0)
-  //     ],
-  //     backgroundColor: [
-  //       '#3B82F6', '#6366F1', '#8B5CF6', '#EC4899', '#F43F5E', 
-  //       '#10B981', '#14B8A6', '#06B6D4', '#0EA5E9', '#1D4ED8'
-  //     ],
-  //     borderColor: '#ffffff',
-  //     borderWidth: 2,
-  //     hoverBackgroundColor: [
-  //       '#60A5FA', '#818CF8', '#A78BFA', '#F472B6', '#FB7185',
-  //       '#34D399', '#2DD4BF', '#22D3EE', '#38BDF8', '#3B82F6'
-  //     ],
-  //     hoverBorderWidth: 3
-  //   }]
-  // };
+
   const assetLabels = [
     ...nelloreUnit.commercialAssets.map(asset => ({ id: asset.id, label: asset.id })),
     ...nelloreUnit.nonCommercialAssets.map(asset => ({ id: asset.id, label: asset.id }))
@@ -377,76 +361,7 @@ const DashboardLayout = () => {
   </motion.div>
 
   {/* Assets Summary */}
-  {/* <motion.div
-    variants={cardVariants}
-    initial="hidden"
-    animate="visible"
-    transition={{ duration: 0.5, delay: 0.3 }}
-    className="flex-1 bg-white p-3 rounded-lg shadow-md hover:shadow-lg transition-shadow flex flex-col overflow-hidden"
-  >
-    <div className="flex items-center justify-between mb-2">
-      <h3 className="text-xs font-semibold text-gray-700">Assets Summary</h3>
-      <motion.button 
-        whileHover={{ scale: 1.2 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => toggleSection("assets")}
-        className="text-gray-500 hover:text-gray-700"
-      >
-        {expandedSections.assets ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
-      </motion.button>
-    </div>
 
-    {expandedSections.assets && (
-      <motion.div 
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ opacity: 1, height: 'auto' }}
-        transition={{ duration: 0.3 }}
-        className="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar"
-      >
-        <div>
-          <h4 className="text-2xs font-medium text-gray-500">
-            Commercial Assets ({nelloreUnit.commercialAssets.length})
-          </h4>
-          <div className="mt-1 space-y-1">
-            {nelloreUnit.commercialAssets.map(asset => (
-              <motion.div 
-                key={asset.id} 
-                whileHover={{ x: 3 }}
-                className="flex justify-between text-2xs p-1 rounded hover:bg-gray-50"
-              >
-                <span className="truncate">{asset.type}</span>
-                <span className="font-semibold whitespace-nowrap ml-2">
-                  ₹{new Intl.NumberFormat('en-IN').format(asset.financials.revenue)}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <h4 className="text-2xs font-medium text-gray-500">
-            Non-Commercial Assets ({nelloreUnit.nonCommercialAssets.length})
-          </h4>
-          <div className="mt-1 space-y-1">
-            {nelloreUnit.nonCommercialAssets.map(asset => (
-              <motion.div 
-                key={asset.id} 
-                whileHover={{ x: 3 }}
-                className="flex justify-between text-2xs p-1 rounded hover:bg-gray-50"
-              >
-                <span className="truncate">{asset.type}</span>
-                <span className="font-semibold whitespace-nowrap ml-2">
-                  {asset.financials.revenue 
-                    ? `₹${new Intl.NumberFormat('en-IN').format(asset.financials.revenue)}`
-                    : 'N/A'}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
-    )}
-  </motion.div> */}
 <motion.div
     variants={cardVariants}
     initial="hidden"
@@ -553,87 +468,7 @@ const DashboardLayout = () => {
           {/* Middle Column - Main Charts */}
           <div className="lg:col-span-2 flex flex-col h-[90vh] gap-2">
   {/* Revenue by Asset */}
-  {/* <motion.div
-    variants={cardVariants}
-    initial="hidden"
-    animate="visible"
-    transition={{ duration: 0.5, delay: 0.4 }}
-    className="flex-1 bg-white p-3 rounded-lg shadow-md hover:shadow-lg transition-shadow flex flex-col overflow-hidden"
-    style={{
-      border: '1px solid #d1d5db', // light gray border (Tailwind's border-gray-300)
-      background: 'linear-gradient(145deg, #ffffff, #f0f0f0)', // soft gradient for highlight
-      boxShadow: '4px 4px 10px #c5c5c5, -4px -4px 10px #ffffff', // dual shadows for 3D pop
-    }}
-  >
-    <div className="flex items-center justify-between mb-2 pt-[2%]">
-      <h3 className="text-xs font-semibold text-gray-700">Revenue by Asset</h3>
-      <motion.button 
-        whileHover={{ scale: 1.2 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => toggleSection("revenue")}
-        className="text-gray-500 hover:text-gray-700"
-      >
-        {expandedSections.revenue ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
-      </motion.button>
-    </div>
 
-    {expandedSections.revenue && (
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="flex-1"
-      >
-        <Bar 
-          data={revenueChartData}
-          options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                position: 'top',
-                labels: { font: { size: 10 }, boxWidth: 10 }
-              },
-              tooltip: {
-                callbacks: {
-                  label: context =>
-                    ' ₹' + new Intl.NumberFormat('en-IN').format(context.raw)
-                },
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                titleFont: { size: 11 },
-                bodyFont: { size: 10 },
-                padding: 8,
-                displayColors: true
-              }
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: {
-                  callback: value => '₹' + new Intl.NumberFormat('en-IN').format(value),
-                  font: { size: 8 }
-                },
-                grid: { color: 'rgba(0, 0, 0, 0.05)' }
-              },
-              x: {
-                grid: { display: false },
-                ticks: {
-                  font: { size: 8 },
-                  callback: function(value, index) {
-                    return index % 2 === 0 ? this.getLabelForValue(value) : '';
-                  }
-                }
-              }
-            },
-            animation: {
-              duration: 2000,
-              easing: 'easeOutQuart'
-            }
-          }}
-        />
-      </motion.div>
-    )}
-  </motion.div> */}
   <motion.div 
       variants={cardVariants}
       initial="hidden"
@@ -669,7 +504,9 @@ const DashboardLayout = () => {
               plugins: {
                 legend: {
                   position: 'top',
-                  labels: { font: { size: 10 }, boxWidth: 10 }
+                  labels: {
+                    //  font: { size: 10 },
+                      boxWidth: 10 }
                 },
                 tooltip: {
                   callbacks: {
@@ -677,8 +514,8 @@ const DashboardLayout = () => {
                       ' ₹' + new Intl.NumberFormat('en-IN').format(context.raw)
                   },
                   backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                  titleFont: { size: 11 },
-                  bodyFont: { size: 10 },
+                  // titleFont: { size: 11 },
+                  // bodyFont: { size: 10 },
                   padding: 8,
                   displayColors: true
                 }
@@ -688,14 +525,14 @@ const DashboardLayout = () => {
                   beginAtZero: true,
                   ticks: {
                     callback: value => '₹' + new Intl.NumberFormat('en-IN').format(value),
-                    font: { size: 8 }
+                    // font: { size: 8 }
                   },
                   grid: { color: 'rgba(0, 0, 0, 0.05)' }
                 },
                 x: {
                   grid: { display: false },
                   ticks: {
-                    font: { size: 8 },
+                    // font: { size: 8 },
                     callback: function(value, index) {
                       return index % 2 === 0 ? this.getLabelForValue(value) : '';
                     }
@@ -755,7 +592,7 @@ const DashboardLayout = () => {
                 legend: {
                   position: 'right',
                   labels: {
-                    font: { size: 8 },
+                    // font: { size: 8 },
                     padding: 6,
                     usePointStyle: true,
                     pointStyle: 'circle'
@@ -770,8 +607,8 @@ const DashboardLayout = () => {
                     }
                   },
                   backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                  titleFont: { size: 10 },
-                  bodyFont: { size: 9 },
+                  // titleFont: { size: 10 },
+                  // bodyFont: { size: 9 },
                   padding: 6,
                   displayColors: true,
                   usePointStyle: true
@@ -824,13 +661,13 @@ const DashboardLayout = () => {
                   beginAtZero: true,
                   ticks: {
                     callback: value => '₹' + new Intl.NumberFormat('en-IN').format(value),
-                    font: { size: 8 }
+                    // font: { size: 8 }
                   },
                   grid: { color: 'rgba(0, 0, 0, 0.05)' }
                 },
                 x: {
                   grid: { display: false },
-                  ticks: { font: { size: 8 } }
+                  // ticks: { font: { size: 8 } }
                 }
               },
               animation: { duration: 2000 }
@@ -846,51 +683,7 @@ const DashboardLayout = () => {
           {activeTab === "detailed" && (
             <div ref={detailedRef} className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-3">
               {/* Profit Composition */}
-              {/* <motion.div
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                transition={{ duration: 0.5, delay: 0.6 }}
-                className="bg-white p-3 rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-orange-500"
-              >
-                <h3 className="text-xs font-semibold text-gray-700 mb-2">Profit Composition</h3>
-                <div className="h-48">
-                  <Bar 
-                    data={profitChartData}
-                    options={{
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      plugins: {
-                        legend: {
-                          display: false
-                        },
-                        tooltip: {
-                          callbacks: {
-                            label: function(context) {
-                              return ' ₹' + new Intl.NumberFormat('en-IN').format(context.raw);
-                            }
-                          }
-                        }
-                      },
-                      scales: {
-                        y: {
-                          beginAtZero: true,
-                          ticks: {
-                            callback: function(value) {
-                              return '₹' + new Intl.NumberFormat('en-IN').format(value);
-                            }
-                          }
-                        }
-                      },
-                      animation: {
-                        duration: 2000
-                      }
-                    }}
-                  />
-                </div>
-              </motion.div> */}
-
-
+             
 <motion.div
   variants={{
     hidden: { opacity: 0, y: 5 },
@@ -964,8 +757,8 @@ const DashboardLayout = () => {
                 }
               },
               backgroundColor: 'rgba(31, 41, 55, 0.9)',
-              titleFont: { size: 10 },
-              bodyFont: { size: 10 },
+              // titleFont: { size: 10 },
+              // bodyFont: { size: 10 },
               padding: 6,
               cornerRadius: 6,
               displayColors: false
@@ -1027,7 +820,7 @@ const DashboardLayout = () => {
               callbacks: {
                 label: (ctx) => `₹${ctx.raw.toLocaleString('en-IN')}`
               },
-              bodyFont: { size: 11 },
+              // bodyFont: { size: 11 },
               displayColors: false
             }
           },
@@ -1040,14 +833,14 @@ const DashboardLayout = () => {
               ticks: {
                 callback: (val) =>
                   '₹' + (val > 1000 ? `${(val / 1000).toFixed(0)}k` : val),
-                font: { size: 9 }
+                // font: { size: 9 }
               }
             },
             y: {
               grid: { display: false },
               ticks: {
                 font: {
-                  size: 10,
+                  // size: 10,
                   weight: '500',
                   family: "'Inter', sans-serif"
                 },
@@ -1091,34 +884,7 @@ const DashboardLayout = () => {
 
 
               {/* Cash Flow */}
-              {/* <motion.div
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                transition={{ duration: 0.5, delay: 0.7 }}
-                whileHover={{ y: -3 }}
-                className="bg-white p-3 rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-green-500"
-              >
-                <h3 className="text-xs font-semibold text-gray-700 mb-2">Cash Flow</h3>
-                <div className="space-y-2">
-                  {[
-                    { label: "Cash & Bank", value: nelloreUnit.financials.cashAndBank, color: "text-gray-800" },
-                    { label: "Receivables", value: nelloreUnit.financials.receivables, color: "text-gray-800" },
-                    { label: "Payables", value: nelloreUnit.financials.payables, color: "text-red-500" }
-                  ].map((item, index) => (
-                    <motion.div 
-                      key={index}
-                      whileHover={{ scale: 1.02 }}
-                      className="flex justify-between items-center p-1 rounded hover:bg-gray-50"
-                    >
-                      <span className="text-2xs text-gray-600">{item.label}</span>
-                      <span className={`text-xs font-semibold ${item.color}`}>
-                        ₹{new Intl.NumberFormat('en-IN').format(item.value)}
-                      </span>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div> */}
+              
 
 <motion.div
   variants={{
@@ -1216,46 +982,7 @@ const DashboardLayout = () => {
               
 
               {/* Employee Metrics */}
-              {/* <motion.div
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                transition={{ duration: 0.5, delay: 0.8 }}
-                whileHover={{ y: -3 }}
-                className="bg-white p-3 rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-purple-500"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-xs font-semibold text-gray-700">Employee Metrics</h3>
-                  <motion.div
-                    animate={{ rotate: [0, 20, -20, 0] }}
-                    transition={{ repeat: Infinity, duration: 3 }}
-                  >
-                    <FaUsers className="text-purple-500 text-base" />
-                  </motion.div>
-                </div>
-
-                <div className="space-y-2">
-                  {[
-                    { label: "Total Wages", value: nelloreUnit.financials.employeeWages },
-                    { label: "Total Employees", value: Math.round(nelloreUnit.financials.employeeWages / 15000) }
-                  ].map((item, index) => (
-                    <motion.div 
-                      key={index}
-                      whileHover={{ x: 3 }}
-                      className="p-1 rounded hover:bg-gray-50"
-                    >
-                      <h4 className="text-2xs font-medium text-gray-500">{item.label}</h4>
-                      <p className="text-sm font-semibold">
-                        {typeof item.value === 'number' ? 
-                          item.value.toLocaleString('en-IN') : 
-                          item.value}
-                      </p>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div> */}
-
-
+              
 <motion.div
   variants={cardVariants}
   initial="hidden"

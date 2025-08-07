@@ -1959,7 +1959,7 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
       commercialAssets: false,
       nonCommercialAssets: false
     });
-    navigate("/AP");
+    navigate("/Apdashboard");
     if (isMobile) setSidebarOpen(false);
   };
 
@@ -1989,7 +1989,7 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
   const toggleSection = (section) => setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
   
   const isAPDashboardActive = () => {
-    return window.location.pathname === '/' || window.location.pathname === '/AP';
+    return window.location.pathname === '/' || window.location.pathname === '/Apdashboard';
   };
 
   const isNelloreUnitActive = () => {
@@ -2006,7 +2006,7 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
     const assetId = path.startsWith('/') ? path.split('/')[1] : null;
     console.log("Sidebar useEffect triggered. Current path:", path, "assetId:", assetId);
   
-    if (path === '/' || path === '/AP') {
+    if (path === '/' || path === '/Apdashboard') {
       setOpenSections({
         units: false,
         commercialAssets: false,

@@ -941,8 +941,14 @@ import { FiPackage } from 'react-icons/fi';
 
 import { useState } from 'react';
 import AssetHeader from './AssetHeader';
-ChartJS.register(...registerables);
+import  FloatingChatButton  from './Chat'
+import SideTagPanel from './SideTagPanel';
+import { configureChartDefaults } from './setupCharts';
 
+
+
+ChartJS.register(...registerables);
+configureChartDefaults();
 const AssetPage = ({ setActiveAsset }) => {
   const { id } = useParams();
   setActiveAsset(id);
@@ -1047,44 +1053,12 @@ const AssetPage = ({ setActiveAsset }) => {
       hoverOffset: 20
     }]
   };
-
-  // const chartOptions = {
-  //   responsive: true,
-  //   maintainAspectRatio: false,
-  //   plugins: {
-  //     legend: {
-  //       position: 'bottom',
-  //       labels: {
-  //         boxWidth: 12,
-  //         padding: 12,
-  //         font: { size: 12 },
-  //         usePointStyle: true
-  //       }
-  //     },
-  //     tooltip: {
-  //       callbacks: {
-  //         label: (context) => `${context.label}: ${formatCurrency(context.raw)}`
-  //       },
-  //       displayColors: true,
-  //       usePointStyle: true,
-  //       padding: 12,
-  //       bodyFont: { size: 12 }
-  //     }
-  //   },
-  //   animation: {
-  //     duration: 2000,
-  //     animateScale: true,
-  //     animateRotate: true
-  //   },
-  //   elements: {
-  //     arc: { borderJoinStyle: 'round' },
-  //     bar: { borderSkipped: false }
-  //   }
-  // };
  
-
   return (
+    
     <div className="p-1 h-screen flex flex-col bg-grey overflow-hidden relative">
+      <FloatingChatButton/>
+      <SideTagPanel/>
       {/* Asset Header with Message Button */}
       <AssetHeader asset={asset} setShowMessageForm={setShowMessageForm}/>
 
@@ -1197,7 +1171,7 @@ const AssetPage = ({ setActiveAsset }) => {
       </AnimatePresence>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 flex-1 min-h-0 pb-1">
-    {/* Asset Table - With restored background gradients */}
+    {/* Asset Table */}
     <motion.div
   initial={{ opacity: 0, x: -20 }}
   animate={{ opacity: 1, x: 0 }}
@@ -1260,12 +1234,12 @@ const AssetPage = ({ setActiveAsset }) => {
             legend: { display: false },
             tooltip: {
               padding: 10,
-              bodyFont: {
-                size: 12
-              },
-              titleFont: {
-                size: 13
-              }
+              // bodyFont: {
+              //   size: 12
+              // },
+              // titleFont: {
+              //   size: 13
+              // }
             }
           },
           scales: {
@@ -1273,9 +1247,9 @@ const AssetPage = ({ setActiveAsset }) => {
               beginAtZero: true,
               ticks: {
                 padding: 5,
-                font: {
-                  size: 11
-                }
+                // font: {
+                //   size: 11
+                // }
               },
               grid: {
                 drawTicks: false
@@ -1283,9 +1257,9 @@ const AssetPage = ({ setActiveAsset }) => {
             },
             x: {
               ticks: {
-                font: {
-                  size: 11
-                }
+                // font: {
+                //   size: 11
+                // }
               },
               grid: {
                 display: false
@@ -1338,9 +1312,9 @@ const AssetPage = ({ setActiveAsset }) => {
               labels: { 
                 boxWidth: 10,
                 padding: 12,
-                font: {
-                  size: 11 // Slightly smaller font
-                }
+                // font: {
+                //   size: 11 
+                // }
               }
             }
           },

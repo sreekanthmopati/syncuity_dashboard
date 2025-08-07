@@ -4,7 +4,9 @@ import Sidebar from './components/Sidebar';
 import AssetPage from './components/AssetPage';
 // import UnitDashboard from './UnitDashboard';
 import DashboardLayout from './components/DashboardLayout';
+import MapView from './components/MapView';
 import AndhraPradeshLayout from './components/AndhraPradeshLayout';
+import ApDashboard from './components/ApDashboard'
 // import RevenuePieChart from './components/RevenuePieChart';
 
 
@@ -19,11 +21,14 @@ function App() {
         <div  
            className="flex-1">
           <Routes>
-            {/* <Route path="/unit/:unitId" element={<UnitDashboard />} /> */}
-            <Route path="/:id" element={<AssetPage setActiveAsset={setActiveAssetId}/>} />
+            
+            <Route path="/map/districts" element={<MapView/>} />
+            <Route path="/Apdashboard" element={<ApDashboard />} />
             <Route path="/NelloreUnit" element={<DashboardLayout />} />
             <Route path="/AP" element={<AndhraPradeshLayout />} />
+            
             <Route path="/" element={<Navigate to="/AP" replace />} />
+            <Route path="/:id" element={<AssetPage setActiveAsset={setActiveAssetId}/>} />
             
           </Routes>
         </div>
