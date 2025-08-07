@@ -130,7 +130,7 @@ const DashboardComponent = () => {
 
     {/* Asset Deployment Overview */}
     <div className="bg-white p-4 rounded-lg shadow flex flex-col">
-      <h2 className="font-bold text-lg mb-2">Asset Deployment Overview</h2>
+      <h2 className="font-bold text-lg mb-2">revenue trend Overview</h2>
       <div className="flex-1 min-h-0">
         <Line 
           data={salesOverview} 
