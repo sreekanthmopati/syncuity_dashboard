@@ -22,7 +22,8 @@ const [error, setError] = useState(null);
 useEffect(() => {
     const fetchStaleAssets = async () => {
       try {
-        const res = await fetch('http://localhost:5000/dumphistory/outdated?days=3'); // Your backend route
+        // const res = await fetch('http://localhost:5000/dumphistory/outdated?days=3'); // Your backend route
+        const res = await fetch('https://analytics-api-4422.onrender.com/dumphistory/outdated?days=3');
         if (!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
         setStaleAssets(data);
