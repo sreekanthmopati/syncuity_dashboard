@@ -19,7 +19,8 @@ import {
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { configureChartDefaults } from './setupCharts';
-
+import  FloatingChatButton  from './Chat'
+import SideTagPanel from './SideTagPanel';
 
 
 
@@ -158,6 +159,8 @@ const DashboardLayout = () => {
 
   return (
     <div className="p-3 bg-gray-50 min-h-screen max-h-screen overflow-hidden flex flex-col">
+      <FloatingChatButton/>
+      <SideTagPanel/>
       {/* Header */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}

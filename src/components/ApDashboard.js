@@ -13,6 +13,8 @@ import {
   Filler
 } from 'chart.js';
 import MapView from './MapView';
+import  FloatingChatButton  from './Chat'
+import SideTagPanel from './SideTagPanel';
 
 ChartJS.register(
   CategoryScale,
@@ -111,10 +113,24 @@ const DashboardComponent = () => {
 
   return (
 <div className="h-screen w-full bg-white text-gray-800 p-4 overflow-hidden">
-  <div className="h-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" style={{ gridAutoRows: "minmax(200px, 1fr)" }}>
-    {/* Sales Overview Card */}
+  <FloatingChatButton />
+  <SideTagPanel />
+  
+  {/* Added Dashboard Heading */}
+  <div className="mb-4">
+    <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+      Andhra Pradesh Analytics Dashboard
+    </h1>
+    <p className="text-sm text-gray-500 mt-1">
+      Comprehensive overview of asset deployment and revenue performance
+    </p>
+  </div>
+
+  <div className="h-[calc(100%-3.5rem)] grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" style={{ gridAutoRows: "minmax(200px, 1fr)" }}>
+
+    {/* Asset Deployment Overview */}
     <div className="bg-white p-4 rounded-lg shadow flex flex-col">
-      <h2 className="font-bold text-lg mb-2">Sales Overview</h2>
+      <h2 className="font-bold text-lg mb-2">Asset Deployment Overview</h2>
       <div className="flex-1 min-h-0">
         <Line 
           data={salesOverview} 
@@ -127,51 +143,47 @@ const DashboardComponent = () => {
       </div>
     </div>
 
-    {/* Revenue Card */}
-   {/* Revenue Card */}
-{/* Revenue Card */}
-<div className="bg-white p-4 rounded-lg shadow flex flex-col">
-  <div className="text-center">
-    <h2 className="text-sm font-semibold">Total Revenue</h2>
-    <p className="text-2xl font-bold">$450,000</p>
-  </div>
-  <div className="flex-1 flex justify-center items-center py-1 min-h-0">
-    <div className="w-full h-[70%] aspect-square">
-      <Doughnut 
-        data={doughnutData} 
-        options={{ 
-          cutout: '70%', 
-          responsive: true, 
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } } 
-        }} 
-      />
-    </div>
-  </div>
-  <div className="text-center">
-    <h2 className="text-sm font-semibold">Avg. Order Value</h2>
-    <p className="text-lg font-bold">$250</p>
-  </div>
-</div>
-
-
-{/* Conversion Rate Card */}
-<div className="bg-white p-4 rounded-lg shadow flex flex-col">
-  <div>
-    <h2 className="text-sm font-semibold">Conversion Rate</h2>
-    <p className="text-xl font-bold">3.8%</p>
-  </div>
-  <div className="flex-1 flex flex-col justify-center min-h-0 space-y-1 px-4">
-    <div className="w-full h-[8%] sm:h-[10%] bg-green-100 rounded" />
-    <div className="text-xs text-center">3.5%</div>
-    <div className="w-full h-[6%] sm:h-[8%] bg-blue-100 rounded" />
-  </div>
-</div>
-
-
-    {/* Revenue by District Card */}
+    {/* Total District Revenue */}
     <div className="bg-white p-4 rounded-lg shadow flex flex-col">
-      <h2 className="font-bold text-lg mb-2">Revenue by district</h2>
+      <div className="text-center">
+        <h2 className="text-sm font-semibold">Total District Revenue</h2>
+        <p className="text-2xl font-bold">$450,000</p>
+      </div>
+      <div className="flex-1 flex justify-center items-center py-1 min-h-0">
+        <div className="w-full h-[70%] aspect-square">
+          <Doughnut 
+            data={doughnutData} 
+            options={{ 
+              cutout: '70%', 
+              responsive: true, 
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } } 
+            }} 
+          />
+        </div>
+      </div>
+      <div className="text-center">
+        <h2 className="text-sm font-semibold">Avg. Asset Revenue</h2>
+        <p className="text-lg font-bold">$250</p>
+      </div>
+    </div>
+
+    {/* Asset Activation Rate */}
+    <div className="bg-white p-4 rounded-lg shadow flex flex-col">
+      <div>
+        <h2 className="text-sm font-semibold">Asset Activation Rate</h2>
+        <p className="text-xl font-bold">3.8%</p>
+      </div>
+      <div className="flex-1 flex flex-col justify-center min-h-0 space-y-1 px-4">
+        <div className="w-full h-[8%] sm:h-[10%] bg-green-100 rounded" />
+        <div className="text-xs text-center">3.5%</div>
+        <div className="w-full h-[6%] sm:h-[8%] bg-blue-100 rounded" />
+      </div>
+    </div>
+
+    {/* Revenue by District */}
+    <div className="bg-white p-4 rounded-lg shadow flex flex-col">
+      <h2 className="font-bold text-lg mb-2">Revenue by District</h2>
       <div className="flex-1 min-h-0">
         <Bar
           data={revenueByProduct}
@@ -195,9 +207,9 @@ const DashboardComponent = () => {
       </div>
     </div>
 
-    {/* Profit Margin Card */}
+    {/* District Profitability */}
     <div className="bg-white p-4 rounded-lg shadow flex flex-col">
-      <h2 className="font-bold text-lg mb-2">Profit Margin</h2>
+      <h2 className="font-bold text-lg mb-2">District Profitability</h2>
       <div className="flex-1 min-h-0">
         <Bar 
           data={profitMargin} 
@@ -211,26 +223,25 @@ const DashboardComponent = () => {
       </div>
     </div>
 
-    {/* Sales by Region Card */}
+    {/* Asset Map by District */}
     <div className="bg-white p-4 rounded-lg shadow flex flex-col">
-  <h2 className="font-bold text-lg mb-2">Sales by Region</h2>
-  
-  {/* Give more space to the map */}
-  <div className="flex-1 min-h-0 mb-2">
-    <MapView />
-  </div>
+      <h2 className="font-bold text-lg mb-2">Asset Map by District</h2>
+      
+      <div className="flex-1 min-h-0 mb-2">
+        <MapView />
+      </div>
 
-  {/* Shrink and de-emphasize labels */}
-  <div className="flex flex-wrap justify-around text-[0.65rem] gap-1">
-    <span className="bg-blue-100 px-1.5 py-0.5 rounded-full">North: 4,500</span>
-    <span className="bg-orange-100 px-1.5 py-0.5 rounded-full">South: 6,600</span>
-    <span className="bg-green-100 px-1.5 py-0.5 rounded-full">East: 7,200</span>
-    <span className="bg-gray-100 px-1.5 py-0.5 rounded-full">West: 3,100</span>
+      <div className="flex flex-wrap justify-around text-[0.65rem] gap-1">
+        <span className="bg-blue-100 px-1.5 py-0.5 rounded-full">North: 4,500</span>
+        <span className="bg-orange-100 px-1.5 py-0.5 rounded-full">South: 6,600</span>
+        <span className="bg-green-100 px-1.5 py-0.5 rounded-full">East: 7,200</span>
+        <span className="bg-gray-100 px-1.5 py-0.5 rounded-full">West: 3,100</span>
+      </div>
+    </div>
+    
   </div>
 </div>
 
-  </div>
-</div>
   );
 };
 

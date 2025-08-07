@@ -26,8 +26,9 @@ function App() {
             <Route path="/Apdashboard" element={<ApDashboard />} />
             <Route path="/NelloreUnit" element={<DashboardLayout />} />
             <Route path="/AP" element={<AndhraPradeshLayout />} />
-            
-            <Route path="/" element={<Navigate to="/AP" replace />} />
+            <Route path="/" element={<Navigate to="/Apdashboard" replace />} />
+            {/* <Route path="/" element={<Navigate to="/AP" replace />} /> */}
+
             <Route path="/:id" element={<AssetPage setActiveAsset={setActiveAssetId}/>} />
             
           </Routes>

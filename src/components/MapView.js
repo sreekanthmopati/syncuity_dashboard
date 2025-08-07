@@ -128,6 +128,8 @@ import {
         </style>
   
         <MapContainer
+        
+        attributionControl={false}
           bounds={andhraBounds}
           maxBounds={paddedBounds}
           maxBoundsViscosity={0.7}
@@ -138,6 +140,7 @@ import {
             height: "100%",
             width: "100%",
             backgroundColor: "#f9fafb",
+            zIndex: 0,
           }}
           zoomControl={true}
         >
