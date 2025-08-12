@@ -2057,7 +2057,53 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
             <div className="p-2 bg-blue-600 rounded-lg shadow">
               <FiBarChart2 className="text-white text-lg" />
             </div>
-            <h1 className="text-lg font-semibold text-white tracking-tight">SYNCUITY</h1>
+            {/* <h1 className="text-lg font-semibold text-white tracking-tight">SYNCUITY</h1> */}
+
+            <h1 className="text-lg font-semibold text-white tracking-tight">
+  SYNCUITY{' '}
+  <motion.span 
+    className="relative inline-block text-xl"
+    style={{
+      background: "linear-gradient(135deg, #667eea, #764ba2, #ff6b9d, #feca57)",
+      backgroundSize: "400% 400%",
+      WebkitBackgroundClip: "text",
+      backgroundClip: "text",
+      color: "transparent",
+      textShadow: "0 0 20px rgba(255, 107, 157, 0.5)",
+    }}
+    animate={{
+      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+    }}
+    transition={{
+      duration: 4,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }}
+    whileHover={{
+      scale: 1.15,
+      filter: 'drop-shadow(0 0 25px rgba(255, 107, 157, 0.8))',
+      transition: { duration: 0.3 }
+    }}
+  >
+    AI
+    {/* Single sparkle particle */}
+    <motion.span
+      className="absolute -top-1 -right-3 text-yellow-300 text-sm"
+      animate={{
+        opacity: [0, 1, 0],
+        scale: [0.6, 1.4, 0.6],
+        rotate: [0, 180, 360],
+      }}
+      transition={{
+        duration: 3,
+        repeat: Infinity,
+        delay: 0.5
+      }}
+    >
+      ✨
+    </motion.span>
+  </motion.span>
+</h1>
           </div>
         </div>
 
@@ -2263,5 +2309,6 @@ const Sidebar = ({ activeAssetId, setActiveAssetId }) => {
   );
 };
 
-export default Sidebar;
+export default Sidebar; 
+
 

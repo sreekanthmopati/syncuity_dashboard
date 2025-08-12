@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 // const API_BASE_URL = 'http://localhost:5000';
 const API_BASE_URL = 'https://analytics-api-4422.onrender.com';
-const NLQ_API_ENDPOINT = 'https://recruiter.app.n8n.cloud/webhook/natural-language-query';
+// const NLQ_API_ENDPOINT = 'https://recruiter.app.n8n.cloud/webhook/natural-language-query';
 
 const FloatingChatButton = () => {
   // State
@@ -106,7 +106,7 @@ const FloatingChatButton = () => {
     try {
       const res = await fetch(`${API_BASE_URL}/chat/previous-messages?limit=10&offset=${offset}`);
       const data = await res.json();
-  
+      console.log(data,"success");
       const orderedMessages = data.reverse();
       setMessages(prev => [...orderedMessages, ...prev]);
       setOffset(prev => prev + 10);
@@ -246,11 +246,11 @@ const FloatingChatButton = () => {
    
     
     try {
-      const nlqResponse = await fetch(NLQ_API_ENDPOINT, {
+      const nlqResponse = await fetch(`${API_BASE_URL}/nlq/proxy`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          // 'Accept': 'application/json'
         },
         body: JSON.stringify({ question: userQuestion })
       });
@@ -333,45 +333,6 @@ const FloatingChatButton = () => {
   return (
     <>
       {/* Floating Button */}
-      {/* {!isOpen && (
-        <div
-          ref={buttonRef}
-          onMouseDown={handleMouseDown}
-          onClick={handleClick}
-          style={{
-            position: 'fixed',
-            left: buttonPosition.x,
-            top: buttonPosition.y,
-            zIndex: 50,
-            cursor: isDragging ? 'grabbing' : 'grab'
-          }}
-        >
-          <button className="group flex items-center justify-center gap-2 w-auto px-4 pr-5 h-14 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg"
-            style={{
-              background: 'linear-gradient(145deg, #3b82f6, #2563eb)',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-              position: 'relative',
-              overflow: 'hidden',
-              whiteSpace: 'nowrap'
-            }}>
-            <div className="relative">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white transform group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-              </svg>
-              <div className="absolute -bottom-1 -right-1 flex space-x-0.5">
-                {[...Array(3)].map((_, i) => (
-                  <span key={i} className="block h-1 w-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ transitionDelay: `${i * 100}ms` }} />
-                ))}
-              </div>
-            </div>
-            <span className="text-white font-medium text-sm tracking-wide">Ask AI</span>
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-full bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
-            </div>
-          </button>
-        </div>
-      )} */}
-
 {!isOpen && (
     <motion.div
   ref={buttonRef}
@@ -638,12 +599,26 @@ const FloatingChatButton = () => {
       {/* Chat Modal */}
       {isOpen && (
   <div
-    className="fixed z-50 w-80 max-h-[90vh] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-300"
-    style={calculateModalPosition()}
+    className="fixed z-50 w-80 max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden border border-indigo-700/30"
+    style={{
+      ...calculateModalPosition(),
+      background: 'radial-gradient(ellipse at top, #1a1a3e 0%, #0f0f23 100%)',
+      boxShadow: '0 12px 32px rgba(102, 126, 234, 0.4), 0 4px 16px rgba(15, 15, 35, 0.6)'
+    }}
   >
     {/* Header */}
-    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 text-white flex justify-between items-center">
-      <h3 className="font-semibold text-base">💬 Data Assistant</h3>
+    <div 
+      className="p-4 text-white flex justify-between items-center"
+      style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #ff6b9d 100%)'
+      }}
+    >
+      <h3 className="font-semibold text-base flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        </svg>
+        Data Assistant
+      </h3>
       <button
         onClick={() => setIsOpen(false)}
         className="hover:text-indigo-200 transition"
@@ -658,11 +633,14 @@ const FloatingChatButton = () => {
     <div
       ref={chatBoxRef}
       onScroll={handleScroll}
-      className="h-64 p-4 overflow-y-auto bg-gray-50 space-y-4 custom-scrollbar"
+      className="h-64 p-4 overflow-y-auto space-y-4 custom-scrollbar"
+      style={{
+        background: 'radial-gradient(ellipse at center, #1a1a3e 0%, #0f0f23 100%)'
+      }}
     >
       {isLoadingPrevious && (
         <div className="flex justify-center py-2">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-400"></div>
         </div>
       )}
 
@@ -675,7 +653,7 @@ const FloatingChatButton = () => {
           <div key={idx} ref={(el) => (messageRefs.current[idx] = el)}>
             {showDate && (
               <div className="flex justify-center my-2">
-                <div className="bg-gray-300 text-gray-700 text-xs px-2 py-1 rounded-full">
+                <div className="bg-indigo-900/50 text-indigo-200 text-xs px-2 py-1 rounded-full">
                   {formatDate(msg.createdAt)}
                 </div>
               </div>
@@ -683,65 +661,81 @@ const FloatingChatButton = () => {
 
             {/* Question */}
             <div className="flex justify-end mb-1">
-              <div className="max-w-[85%] bg-blue-600 text-white rounded-2xl px-4 py-2 shadow-md rounded-br-none">
+              <div 
+                className="max-w-[85%] rounded-2xl px-4 py-2 shadow-md rounded-br-none"
+                style={{
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  color: 'white'
+                }}
+              >
                 <p className="text-sm">{msg.question}</p>
               </div>
             </div>
 
             {/* Answer */}
             <div className="flex justify-start mb-5">
-                    <div className="max-w-[85%] bg-white border border-gray-100 rounded-2xl px-4 py-3 rounded-bl-none shadow-sm">
-                      <div className="flex items-center mb-1 space-x-2">
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-blue-400 flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                        <p className="text-xs font-medium text-gray-500">AI Assistant</p>
-                      </div>
-                      {/* <pre className={`whitespace-pre-wrap text-sm font-sans text-gray-700 ${!isExpanded && isLongAnswer ? 'line-clamp-3' : ''}`}>
-                        {msg.answer}
-                      </pre> */}
-                      <div
-  className={`whitespace-pre-wrap text-sm font-sans text-gray-700 ${
-    !isExpanded && isLongAnswer ? 'line-clamp-3' : ''
-  }`}
-  dangerouslySetInnerHTML={{ __html: markdownToHtml(msg.answer) }}
-/>
-                      {isLongAnswer && (
-                        <button 
-                          onClick={() => toggleExpand(idx)}
-                          className="text-blue-500 text-xs mt-1 hover:text-blue-600 focus:outline-none font-medium flex items-center"
-                        >
-                          {isExpanded ? (
-                            <>
-                              <span>Show less</span>
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                              </svg>
-                            </>
-                          ) : (
-                            <>
-                              <span>Read more</span>
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                              </svg>
-                            </>
-                          )}
-                        </button>
-                      )}
-                    </div>
+              <div 
+                className="max-w-[85%] rounded-2xl px-4 py-3 rounded-bl-none shadow-sm"
+                style={{
+                  background: 'rgba(30, 30, 70, 0.7)',
+                  border: '1px solid rgba(102, 126, 234, 0.3)',
+                  backdropFilter: 'blur(10px)'
+                }}
+              >
+                <div className="flex items-center mb-1 space-x-2">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
                   </div>
+                  <p className="text-xs font-medium text-indigo-300">AI Assistant</p>
                 </div>
-              );
-            })}
+                <div
+                  className={`whitespace-pre-wrap text-sm font-sans text-gray-200 ${
+                    !isExpanded && isLongAnswer ? 'line-clamp-3' : ''
+                  }`}
+                  dangerouslySetInnerHTML={{ __html: markdownToHtml(msg.answer) }}
+                />
+                {isLongAnswer && (
+                  <button 
+                    onClick={() => toggleExpand(idx)}
+                    className="text-purple-300 hover:text-purple-200 text-xs mt-1 focus:outline-none font-medium flex items-center transition-colors"
+                  >
+                    {isExpanded ? (
+                      <>
+                        <span>Show less</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                        </svg>
+                      </>
+                    ) : (
+                      <>
+                        <span>Read more</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })}
       {isLoading && (
         <div className="flex justify-start">
-          <div className="bg-gray-200 text-gray-800 rounded-2xl px-3 py-2 max-w-[85%] shadow-sm">
+          <div 
+            className="rounded-2xl px-3 py-2 max-w-[85%] shadow-sm"
+            style={{
+              background: 'rgba(102, 126, 234, 0.2)',
+              border: '1px solid rgba(102, 126, 234, 0.3)'
+            }}
+          >
             <div className="flex space-x-1 items-center">
-              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-              <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              <div className="w-2 h-2 bg-purple-300 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+              <div className="w-2 h-2 bg-pink-300 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+              <div className="w-2 h-2 bg-blue-300 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
             </div>
           </div>
         </div>
@@ -752,19 +746,32 @@ const FloatingChatButton = () => {
 
     {/* Scroll to bottom button */}
     {showScrollButton && (
-            <button
-              onClick={() => scrollToBottom('smooth')}
-              className="absolute right-4 bottom-20 bg-white border border-gray-200 text-blue-600 rounded-full p-2 shadow-lg hover:bg-gray-50 transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-              aria-label="Scroll to bottom"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </svg>
-            </button>
-          )}
+      <button
+        onClick={() => scrollToBottom('smooth')}
+        className="absolute right-4 bottom-20 rounded-full p-2 shadow-lg hover:scale-105 transition-all focus:outline-none"
+        style={{
+          background: 'rgba(102, 126, 234, 0.3)',
+          border: '1px solid rgba(102, 126, 234, 0.5)',
+          color: 'white',
+          backdropFilter: 'blur(5px)'
+        }}
+        aria-label="Scroll to bottom"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+      </button>
+    )}
 
     {/* Footer input */}
-    <form onSubmit={handleSubmit} className="p-4 border-t border-gray-200 bg-white">
+    <form 
+      onSubmit={handleSubmit} 
+      className="p-4 border-t border-indigo-700/30"
+      style={{
+        background: 'rgba(15, 15, 35, 0.8)',
+        backdropFilter: 'blur(5px)'
+      }}
+    >
       <div className="flex space-x-2">
         <input
           ref={inputRef}
@@ -772,13 +779,23 @@ const FloatingChatButton = () => {
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="Ask about your data..."
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm shadow-sm transition-all"
+          className="flex-1 px-4 py-2 rounded-full focus:outline-none text-sm shadow-sm transition-all"
+          style={{
+            background: 'rgba(30, 30, 70, 0.7)',
+            border: '1px solid rgba(102, 126, 234, 0.5)',
+            color: 'white',
+            placeholder: 'rgba(200, 200, 255, 0.5)'
+          }}
           disabled={isLoading}
         />
         <button
           type="submit"
           disabled={isLoading || !question.trim()}
-          className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:bg-blue-400 transition-all min-w-[60px] shadow-sm text-sm"
+          className="px-4 py-2 rounded-full hover:opacity-90 disabled:opacity-50 transition-all min-w-[60px] shadow-sm text-sm"
+          style={{
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white'
+          }}
         >
           {isLoading ? (
             <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -793,7 +810,6 @@ const FloatingChatButton = () => {
     </form>
   </div>
 )}
-
     </>
   );
 };

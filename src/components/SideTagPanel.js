@@ -113,7 +113,7 @@ const [isMounted, setIsMounted] = useState(false);
   
 
 
-<AnimatePresence>
+      <AnimatePresence>
   {isMounted && (
     <motion.div
       initial={{ x: '100%', y: windowSize.width < 640 ? '100%' : 0 }}
@@ -188,7 +188,7 @@ const [isMounted, setIsMounted] = useState(false);
               }}
             >
               <div className="flex items-center gap-2 relative">
-                {/* Brain/AI Analytics PNG Icon with refined animation */}
+                {/* AI text with sparkle effects */}
                 <motion.div
                   className="relative"
                   animate={{
@@ -201,27 +201,55 @@ const [isMounted, setIsMounted] = useState(false);
                     ease: "easeInOut"
                   }}
                 >
-                  <img 
-                    src="/ai_brain.png" 
-                    alt="AI Analytics Brain Icon"
-                    className="object-contain"
-                    style={{ 
-                      width: '20px',
-                      height: '20px',
-                      imageRendering: 'crisp-edges',
-                      minWidth: '20px',
-                      minHeight: '20px',
-                      opacity: 1,
-                      filter: 'brightness(0) invert(1)'
+                  <motion.span 
+                    className="font-black text-white drop-shadow-lg relative z-10"
+                    style={{
+                      fontSize: windowSize.width > 1600 ? '1rem' : '0.9rem',
+                      textShadow: '0 0 10px rgba(255, 255, 255, 0.5)'
                     }}
-                    onError={(e) => {
-                      console.error('Image failed to load:', e.target.src);
+                    whileHover={{ 
+                      scale: 1.1,
+                      textShadow: '0 0 15px rgba(255, 255, 255, 0.8)',
+                      transition: { duration: 0.2 }
                     }}
-                    onLoad={(e) => {
-                      console.log('Brain icon loaded - dimensions:', e.target.naturalWidth, 'x', e.target.naturalHeight);
+                  >
+                    AI
+                  </motion.span>
+                  
+                  {/* Sparkle effects around AI text */}
+                  <motion.span
+                    className="absolute -top-1 -right-1 text-white text-xs"
+                    animate={{
+                      opacity: [0, 1, 0],
+                      scale: [0.5, 1.2, 0.5],
+                      rotate: [0, 180, 360]
                     }}
-                  />
-                  {/* Subtle glow effect behind the icon */}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: 0.3
+                    }}
+                  >
+                    ✨
+                  </motion.span>
+                  
+                  <motion.span
+                    className="absolute -bottom-1 -left-1 text-white text-xs"
+                    animate={{
+                      opacity: [0, 1, 0],
+                      scale: [0.5, 1.2, 0.5],
+                      rotate: [360, 180, 0]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: 1
+                    }}
+                  >
+                    ⚡
+                  </motion.span>
+                  
+                  {/* Subtle glow effect behind the AI text */}
                   <motion.div 
                     className="absolute inset-0 rounded-full bg-white blur-[6px] opacity-0"
                     animate={{ opacity: [0, 0.25, 0] }}
