@@ -41,3 +41,37 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.shadow-soft {
+  box-shadow: 0 4px 25px -5px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-glow {
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
+}
+
+

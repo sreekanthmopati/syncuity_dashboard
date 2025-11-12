@@ -133,6 +133,7 @@ import {
           bounds={andhraBounds}
           maxBounds={paddedBounds}
           maxBoundsViscosity={0.7}
+          minZoom={4}
           zoom={zoomLevel}
           scrollWheelZoom={true}
           dragging={true}

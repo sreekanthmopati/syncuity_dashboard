@@ -944,6 +944,7 @@ import AssetHeader from './AssetHeader';
 import  FloatingChatButton  from './Chat'
 import SideTagPanel from './SideTagPanel';
 import { configureChartDefaults } from './setupCharts';
+import MessageModal from "./MessageModal";
 
 
 
@@ -954,25 +955,13 @@ const AssetPage = ({ setActiveAsset }) => {
   setActiveAsset(id);
   const assetId = id;
   const [showMessageForm, setShowMessageForm] = useState(false);
-  const [message, setMessage] = useState('');
-  const [isSending, setIsSending] = useState(false);
-  const [sendSuccess, setSendSuccess] = useState(false);
 
   const assetArray = [...nelloreUnit.commercialAssets, ...nelloreUnit.nonCommercialAssets];
   const asset = assetArray.find(
     (a) => a.id === assetId || a.id.toLowerCase() === assetId?.toLowerCase()
   );
 
-  const handleSendMessage = () => {
-    setIsSending(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsSending(false);
-      setSendSuccess(true);
-      setMessage('');
-      setTimeout(() => setSendSuccess(false), 3000);
-    }, 1500);
-  };
+ 
 
   if (!asset) {
     return (
@@ -1063,112 +1052,11 @@ const AssetPage = ({ setActiveAsset }) => {
       <AssetHeader asset={asset} setShowMessageForm={setShowMessageForm}/>
 
       {/* Message Modal */}
-      <AnimatePresence>
-        {showMessageForm && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-30 z-30 flex items-center justify-center p-4"
-          >
-            <motion.div
-              initial={{ scale: 0.95, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              transition={{ type: 'spring', damping: 25 }}
-              className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-4 text-white">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-xl font-bold">Message {asset.type} RI</h3>
-                  <button
-                    onClick={() => setShowMessageForm(false)}
-                    className="p-1 rounded-full hover:bg-white/20 transition-colors"
-                  >
-                    <FaTimes />
-                  </button>
-                </div>
-              </div>
-
-              <div className="p-5">
-                {sendSuccess ? (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-center py-8"
-                  >
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <FaPaperPlane className="text-green-600 text-2xl" />
-                    </div>
-                    <h4 className="text-xl font-bold text-gray-800 mb-1">
-                      Message Sent!
-                    </h4>
-                    <p className="text-gray-600">The RI will respond soon.</p>
-                  </motion.div>
-                ) : (
-                  <>
-                    <textarea
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 h-40"
-                      placeholder="Type your message here..."
-                    />
-                    <div className="mt-4 flex justify-end space-x-3">
-                      <button
-                        onClick={() => setShowMessageForm(false)}
-                        className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        onClick={handleSendMessage}
-                        disabled={!message.trim() || isSending}
-                        className={`px-4 py-2 rounded-lg text-white flex items-center transition-all ${
-                          !message.trim() || isSending
-                            ? 'bg-blue-400 cursor-not-allowed'
-                            : 'bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg'
-                        }`}
-                      >
-                        {isSending ? (
-                          <>
-                            <svg
-                              className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              ></circle>
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                              ></path>
-                            </svg>
-                            Sending...
-                          </>
-                        ) : (
-                          <>
-                            <FaPaperPlane className="mr-2" />
-                            Send Message
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+<MessageModal
+  show={showMessageForm}
+  onClose={() => setShowMessageForm(false)}
+  assetType={asset.type}
+/>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 flex-1 min-h-0 pb-1">
     {/* Asset Table */}

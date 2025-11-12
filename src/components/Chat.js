@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect, useCallback , useLayoutEffect} from 'react';
 import { motion } from "framer-motion";
 
-// const API_BASE_URL = 'http://localhost:5000';
-const API_BASE_URL = 'https://analytics-api-4422.onrender.com';
-// const NLQ_API_ENDPOINT = 'https://recruiter.app.n8n.cloud/webhook/natural-language-query';
+const API_BASE_URL = 'http://localhost:5000';
+// const API_BASE_URL = 'https://analytics-api-4422.onrender.com';
+
 
 const FloatingChatButton = () => {
   // State

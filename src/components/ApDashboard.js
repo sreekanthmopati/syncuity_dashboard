@@ -1,4 +1,6 @@
-import React from 'react';
+
+import { motion } from "framer-motion";
+import { FaPaperPlane } from 'react-icons/fa';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -15,6 +17,8 @@ import {
 import MapView from './MapView';
 import  FloatingChatButton  from './Chat'
 import SideTagPanel from './SideTagPanel';
+import { useState } from "react";
+import BulkMessage from "./BulkMessage";
 
 ChartJS.register(
   CategoryScale,
@@ -29,6 +33,8 @@ ChartJS.register(
 );
 
 const DashboardComponent = () => {
+
+  const [showMessageForm, setShowMessageForm] = useState(false);
   const salesOverview = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Sep', 'Oct', 'Dec'],
     datasets: [
@@ -117,7 +123,8 @@ const DashboardComponent = () => {
   <SideTagPanel />
   
   {/* Added Dashboard Heading */}
-  <div className="mb-4">
+<div className="flex items-center justify-between">
+  <div className="mb-2">
     <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
       Andhra Pradesh Analytics Dashboard
     </h1>
@@ -125,6 +132,23 @@ const DashboardComponent = () => {
       Comprehensive overview of asset deployment and revenue performance
     </p>
   </div>
+
+  <motion.button
+    onClick={() => setShowMessageForm(true)}
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    className="flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 transition-all text-sm"
+  >
+    <FaPaperPlane className="text-xs" />
+    Message RIs
+  </motion.button>
+</div>
+
+ <BulkMessage show={showMessageForm} onClose={() => setShowMessageForm(false)}   recipients={[
+    "919989035270",
+    "918247034575",
+    "918885744365"
+  ]} />
 
   <div className="h-[calc(100%-3.5rem)] grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" style={{ gridAutoRows: "minmax(200px, 1fr)" }}>
 
